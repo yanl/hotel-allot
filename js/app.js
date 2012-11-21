@@ -1,4 +1,5 @@
-var app = angular.module('app', ['ui']);
+var app = angular.module('demoApp',['ui'] ); //, ['ui']
+
 app.value('ui.config', {
    select2: {
       allowClear: true
