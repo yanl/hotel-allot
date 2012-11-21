@@ -1,0 +1,32 @@
+body {
+	padding-top: 60px;
+}
+.sidebar-nav .control-label {
+	width: 40px;
+}
+.sidebar-nav .controls {
+	margin-left: 50px;
+	margin-bottom: 5px;
+	overflow: hidden;
+}
+.sidebar-nav input {
+	width: 89px;
+}
+.sidebar-nav .form-actions {
+	padding-left: 0;
+	text-align: right;
+	padding: 0;
+	padding-top: 20px;
+	margin: 0;
+}
+.sidebar-nav form {
+	margin: 0;
+}
+#filter-btn {
+	width: 91px;
+}
+legend {
+	font-size: inherit;
+	line-height: inherit;
+	font-weight: bold;
+}
