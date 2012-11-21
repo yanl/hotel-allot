@@ -30,3 +30,6 @@ legend {
 	line-height: inherit;
 	font-weight: bold;
 }
+#calendar {
+	margin-top: 10px;
+}
