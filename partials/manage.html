@@ -1,0 +1,80 @@
+<div class="span3">
+	<div class="well sidebar-nav">
+	  <legend>Filter</legend>
+	  <form name="filterForm" class="form-horizontal">
+		  <div class="control-group">
+			<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
+			<div class="controls">
+			  <div class="input-append">
+				<input id="view-from" name="viewFrom" type="text" ng-model="dateFrom" ui-date>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			  </div>
+			</div>
+			<label class="control-label" for="view-to">To</label>
+			<div class="controls">
+			  <div class="input-append">
+				<input id="view-to" type="text" ng-model="dateTo" ui-date>
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			  </div>
+			</div>
+			<label class="control-label" for="view-to">Hotel</label>
+			<div class="controls" ng-init="hotels = [{id:0, name:'Bar'}, {id:1, name:'Foo'}];">
+				<select id="view-hotel"> <!--ui-select2-->
+					<option ng-repeat="hotel in hotels" value="{{hotel.id}}">{{hotel.name}}</option>
+				</select>
+			</div>
+		  </div>
+		  <div class="form-actions">
+			<div class="btn-group">
+				<button id="filter-btn" class="btn btn-primary" title="Filter View"><i class="icon-search icon-white"></i> Filter</button>
+				<button class="btn" title="Clear Filtering"><i class="icon-remove-sign"></i></button>
+			</div>
+		  </div>
+	  </form>
+	</div>
+</div>
+
+<div class="span8">
+	<legend>Manage Allocations</legend>
+
+	<div>
+		<p><i class="icon-search"></i> Viewing from {{dateFrom | date: 'mediumDate'}} to {{dateTo | date: 'mediumDate'}}</p>
+	</div>
+
+	<!--<tabs>
+	<pane title="foo">foo</pane>
+	<pane title="bar">bar</pane>
+	</tabs>-->
+	
+	<table class="table table-hover table-bordered table-condensed table-striped">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Hotel</th>
+				<th>Room</th>
+				<th>Units</th>
+				<th>Release</th>
+				<th># Days</th>
+				<th>Specific Date</th>
+				<th>Comment</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="checkbox"/></td>
+				<td>Foo</td>
+				<td>Bar</td>
+				<td>1</td>
+				<td>2</td>
+				<td>2</td>
+				<td>00/00/2012</td>
+				<td>Foobar</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="pull-right">
+		<button class="btn" title="Delete Selected" disabled><i class="icon-remove"></i></button>
+		<button class="btn" title="Add a New Allot."><i class="icon-plus"></i></button>
+		<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
+	</div>
+</div>

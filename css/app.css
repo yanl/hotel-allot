@@ -12,6 +12,9 @@ body {
 .sidebar-nav input {
 	width: 89px;
 }
+.sidebar-nav select {
+	width: 126px;
+}
 .sidebar-nav .form-actions {
 	padding-left: 0;
 	text-align: right;
@@ -32,4 +35,12 @@ legend {
 }
 #calendar {
 	margin-top: 10px;
+}
+.navbar p {
+	margin: 10px 0;
+}
+table input[type="checkbox"] {
+	margin: 0;
+	margin-top: -1px;
+	margin-left: 2px;
 }
