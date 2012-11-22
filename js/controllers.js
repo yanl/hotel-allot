@@ -14,5 +14,10 @@ function NavCtrl($scope, $location) {
 }
 
 function HotelsCtrl($scope) {
-	$scope.hotels = [{id:0, name:'Bar'}, {id:1, name:'Foo'}];
+	$scope.hotels = [{id:0, name:'Qwerty'}, {id:1, name:'Foo'}];
+}
+
+function RoomAllocsCtrl($scope) {
+	$scope.allocs = [{selected: false, id:0, hotelName:'Shandrany Resorts & Spa', roomName:'Deluxe', units:1, release:'', days:8, releaseDate:null, comment:'This is a comment'}, 
+						{selected: true, id:0, hotelName:'Shandrany Resorts & Spa', roomName:'Prestige Villa', units:1, release:'', days:8, releaseDate:null, comment:'This is a comment'}];
 }

@@ -18,8 +18,8 @@
 			  </div>
 			</div>
 			<label class="control-label" for="view-to">Hotel</label>
-			<div class="controls" ng-init="hotels = [{id:0, name:'Bar'}, {id:1, name:'Foo'}];">
-				<select id="view-hotel"> <!--ui-select2-->
+			<div class="controls" ng-controller="HotelsCtrl">
+				<select id="view-hotel"  ui-select2>
 					<option ng-repeat="hotel in hotels" value="{{hotel.id}}">{{hotel.name}}</option>
 				</select>
 			</div>
@@ -59,13 +59,13 @@
 				<th>Comment</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td><input type="checkbox"/></td>
-				<td>Foo</td>
-				<td>Bar</td>
-				<td>1</td>
-				<td>2</td>
+		<tbody ng-controller="RoomAllocsCtrl">
+			<tr ng-repeat="alloc in allocs">
+				<td><input type="checkbox" ng-model="alloc.selected"/></td>
+				<td>{{alloc.hotelName}}</td>
+				<td>{{alloc.roomName}}</td>
+				<td>{{alloc.units}}</td>
+				<td>{{alloc.release}}</td>
 				<td>2</td>
 				<td>00/00/2012</td>
 				<td>Foobar</td>
