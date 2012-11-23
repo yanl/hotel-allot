@@ -45,33 +45,10 @@
 	<pane title="foo">foo</pane>
 	<pane title="bar">bar</pane>
 	</tabs>-->
+	<div ng-controller="RoomAllocsCtrl"> <!--class="table table-hover table-bordered table-condensed table-striped"-->
+		<niv ng-grid="gridOptions"></niv>
+	</div>
 	
-	<table class="table table-hover table-bordered table-condensed table-striped">
-		<thead>
-			<tr>
-				<th></th>
-				<th>Hotel</th>
-				<th>Room</th>
-				<th>Units</th>
-				<th>Release</th>
-				<th># Days</th>
-				<th>Specific Date</th>
-				<th>Comment</th>
-			</tr>
-		</thead>
-		<tbody ng-controller="RoomAllocsCtrl">
-			<tr ng-repeat="alloc in allocs">
-				<td><input type="checkbox" ng-model="alloc.selected"/></td>
-				<td>{{alloc.hotelName}}</td>
-				<td>{{alloc.roomName}}</td>
-				<td>{{alloc.units}}</td>
-				<td>{{alloc.release}}</td>
-				<td>2</td>
-				<td>00/00/2012</td>
-				<td>Foobar</td>
-			</tr>
-		</tbody>
-	</table>
 	<div class="pull-right">
 		<button class="btn" title="Delete Selected" disabled><i class="icon-remove"></i></button>
 		<button class="btn" title="Add a New Allot."><i class="icon-plus"></i></button>

@@ -44,3 +44,7 @@ table input[type="checkbox"] {
 	margin-top: -1px;
 	margin-left: 2px;
 }
+.ngViewport {
+	height: auto !important;
+	overflow: hidden;
+}

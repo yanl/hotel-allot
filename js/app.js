@@ -47,7 +47,7 @@ angular.module('components', []).
     };
   })
   
-var app = angular.module('hotelAllot',['ui', 'components'] )
+var app = angular.module('hotelAllot',['ui', 'ngGrid', 'components'] )
 .config(['$routeProvider', function($routeProvider) {
 $routeProvider
    .when('/manage', {templateUrl:'partials/manage.html', controller:ManageCtrl})
