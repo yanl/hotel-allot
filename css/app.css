@@ -63,6 +63,9 @@ table input[type="checkbox"] {
 .ngFooterPanel {
 	display: none;
 }
+.ngHeaderButton {
+	z-index: 2;
+}
 .navbar {
 	text-transform: uppercase;
 }
@@ -79,4 +82,7 @@ table input[type="checkbox"] {
 .no-bg {
 	background: none;
 	border: none;
+}
+.modal .navbar {
+	padding: 0 19px;
 }

@@ -1,5 +1,5 @@
 function ManageCtrl($scope, $routeParams) {
-	
+	console.log($routeParams);
 }
 
 function ViewCtrl($scope, $routeParams) {

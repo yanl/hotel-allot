@@ -50,7 +50,7 @@ angular.module('components', []).
 var app = angular.module('hotelAllot',['ui', 'ngGrid', 'components'] )
 .config(['$routeProvider', function($routeProvider) {
 $routeProvider
-   .when('/manage', {templateUrl:'partials/manage.html', controller:ManageCtrl})
+   .when('/manage/:action', {templateUrl:'partials/manage.html', controller:ManageCtrl})
    .when('/view', {templateUrl:'partials/view.html', controller:ViewCtrl})
    .otherwise({redirectTo:'/view'});
 }]);
