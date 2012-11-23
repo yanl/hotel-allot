@@ -48,3 +48,35 @@ table input[type="checkbox"] {
 	height: auto !important;
 	overflow: hidden;
 }
+.ngGrid {
+	border: 1px solid #D4D4D4;
+	width: 100%;
+}
+.selected {
+	background-color: #006DCC !important;
+	/*background-image: -webkit-linear-gradient(top, #08C, #04C);*/
+}
+.selected .ngCell {
+	border-right-color: #006DCC !important;
+	border-left-color: #006DCC !important;
+}
+.ngFooterPanel {
+	display: none;
+}
+.navbar {
+	text-transform: uppercase;
+}
+.navbar .brand {
+	font-size: inherit;
+	font-weight: bold;
+	color: #4D4D4D;
+	border-right: 1px solid #D4D4D4;
+}
+.well {
+	border-radius: 0;
+	box-shadow: none;
+}
+.no-bg {
+	background: none;
+	border: none;
+}

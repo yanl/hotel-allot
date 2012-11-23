@@ -27,7 +27,7 @@
 		  <div class="form-actions">
 			<div class="btn-group">
 				<button id="filter-btn" class="btn btn-primary" title="Filter View"><i class="icon-search icon-white"></i> Filter</button>
-				<button class="btn" title="Clear Filtering"><i class="icon-remove-sign"></i></button>
+				<button class="btn" title="Clear Filtering" ui-jq="tooltip"><i class="icon-remove-sign"></i></button>
 			</div>
 		  </div>
 	  </form>
@@ -46,12 +46,12 @@
 	<pane title="bar">bar</pane>
 	</tabs>-->
 	<div ng-controller="RoomAllocsCtrl"> <!--class="table table-hover table-bordered table-condensed table-striped"-->
-		<niv ng-grid="gridOptions"></niv>
-	</div>
+		<div ng-grid="gridOptions"></div>
 	
-	<div class="pull-right">
-		<button class="btn" title="Delete Selected" disabled><i class="icon-remove"></i></button>
-		<button class="btn" title="Add a New Allot."><i class="icon-plus"></i></button>
-		<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
+		<div class="navbar no-bg pull-right">
+			<button class="btn" title="Delete Selected" ui-jq="tooltip" disabled><i class="icon-remove"></i></button>
+			<button class="btn" title="Add a New Allot." ui-jq="tooltip"><i class="icon-plus"></i></button>
+			<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
+		</div>
 	</div>
 </div>

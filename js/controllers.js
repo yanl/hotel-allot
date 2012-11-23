@@ -24,6 +24,13 @@ function RoomAllocsCtrl($scope) {
 		data: 'allocs',
 		jqueryUITheme: false,
 		showColumnMenu: false,
+		enablePaging: false,
+		pagingOptions: {
+			pageSizes: [1, 5, 10], //page Sizes
+			pageSize: 1, //Size of Paging data
+			totalServerItems: 0, //of how many items are on the server (for paging)
+			currentPage: 1, //of what page they are currently on
+		},
         columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
                      { field: 'roomName',  displayName: 'Room', width: 100 },
                      { field: 'units', width: 40,},
