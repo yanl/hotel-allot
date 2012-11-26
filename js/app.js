@@ -1,4 +1,52 @@
 angular.module('components', []).
+  directive('hotelrooms', function() {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {},
+      controller: function($scope, $element, $http) {
+		 $scope.idHotel = null;
+		 $scope.idRoom = null;
+		 $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
+			$scope.hotels = data;
+		 });
+		 $scope.hotelChange = function() {
+			if (!$scope.idHotel) {
+			   $scope.idHotel = null;
+			   $scope.idRoom = null;
+			   $scope.rooms = null;
+			   return;
+			}
+			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+$scope.idHotel, {cache:true}).success(function(data) {
+			   $scope.rooms = data;
+			   // todo: update place-holder with # of rooms or "no rooms found"
+			});
+		 };
+		 
+		 $scope.roomChange = function() {
+			if (!$scope.idRoom) {
+			   $scope.idRoom = null;
+			   return;
+			}
+		 }
+		 $scope.roomFormatSel = function(room) {
+			var e = $(room.element);
+			return '<span class="sRoom"><span>' + e.data('cat') + '</span>' + '<span class="srDetails">'+e.data('occupancy')+' '+e.data('meal')+'</span></span>';
+		 }
+		 $scope.roomFormat = function(room) {
+			var e = $(room.element);
+			return '<div class="sRoom">'+
+					 '<div class="srCat">'+
+						e.data('cat')+
+					 '</div>'+
+					 '<div class="srDetails">'+e.data('occupancy')+' '+e.data('meal')+'</div>'+
+				  '</div>';
+		 }
+      },
+      templateUrl:'partials/hotelRoomCtrl.html',
+      replace: true
+    };
+  }).
   directive('tabs', function() {
     return {
       restrict: 'E',
@@ -54,6 +102,12 @@ $routeProvider
    .when('/view', {templateUrl:'partials/view.html', controller:ViewCtrl})
    .otherwise({redirectTo:'/view'});
 }]);
+
+app.factory('serviceId', function() {
+  var shinyNewServiceInstance;
+  //factory function body that constructs shinyNewServiceInstance
+  return shinyNewServiceInstance;
+});
 
 app.value('ui.config', {
    select2: {

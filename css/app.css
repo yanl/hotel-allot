@@ -1,12 +1,21 @@
 body {
 	padding-top: 60px;
 }
+.controls {
+	margin-bottom: 5px;
+}
+.select2-container, .select2-result-label {
+	font-size: 10px;
+}
+.select2-container .select2-choice abbr {
+	top: 6px;
+	right: 19px;
+}
 .sidebar-nav .control-label {
 	width: 40px;
 }
 .sidebar-nav .controls {
 	margin-left: 50px;
-	margin-bottom: 5px;
 	overflow: hidden;
 }
 .sidebar-nav input {
@@ -85,4 +94,35 @@ table input[type="checkbox"] {
 }
 .modal .navbar {
 	padding: 0 19px;
+}
+.sRoom span {
+	display: inline !important;
+}
+.srCat {
+	font-weight: bold;
+}
+.srDetails {
+	font-style: italic;
+	color: #8b8b8b;
+}
+.sidebar-nav .controls-block {
+	display: block;
+	clear: both;
+	margin-left: 0 !important;
+}
+.sidebar-nav .controls-block select, .sidebar-nav .controls-block .select2-container {
+	width: 176px;
+}
+.sidebar-nav .block-label {
+	display: none;
+}
+.dn {
+	display: none;
+}
+.select2-result-label {
+	line-height: 1.4em;
+}
+
+#addModal select, #addModal .select2-container {
+	width: 100%;
 }

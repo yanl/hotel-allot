@@ -1,6 +1,6 @@
-	<div class="well">
+	<div id="addModal" class="well">
 	  <legend>New Allocation</legend>
-	  <form name="addAllocForm" class="form-horizontal">
+	  <form id="addAllocForm" name="addAllocForm" class="form-horizontal">
 		  <div class="control-group">
 			<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
 			<div class="controls">
@@ -16,12 +16,7 @@
 				<span class="add-on"><i class="icon-calendar"></i></span>
 			  </div>
 			</div>
-			<label class="control-label" for="view-to">Hotel</label>
-			<div class="controls" ng-controller="HotelsCtrl">
-				<select id="view-hotel"  ui-select2>
-					<option ng-repeat="hotel in hotels" value="{{hotel.id}}">{{hotel.name}}</option>
-				</select>
-			</div>
+			<hotelrooms />
 		  </div>
 	  </form>
 	</div>
