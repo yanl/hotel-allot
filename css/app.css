@@ -122,6 +122,9 @@ table input[type="checkbox"] {
 .select2-result-label {
 	line-height: 1.4em;
 }
+.ngCell {
+	font-size: 11px;
+}
 
 #addModal select, #addModal .select2-container {
 	width: 100%;
