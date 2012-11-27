@@ -49,7 +49,7 @@ function RoomAllocsCtrl($scope, $http) {
 		},
         columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
                      { field: 'roomName',  displayName: 'Room', width: 100 },
-                     { field: 'units', displayName: 'Units', width: 40,},
-                     { field: 'days', displayName: 'Days', width: 40}]
+                     { field: 'dateFrom', displayName: 'From', width: 75,},
+                     { field: 'dateTo', displayName: 'To', width: 75}]
 		};
 }

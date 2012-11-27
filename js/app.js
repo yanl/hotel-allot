@@ -15,6 +15,7 @@ angular.module('components', []).
 			   $scope.idHotel = null;
 			   $scope.idRoom = null;
 			   $scope.rooms = null;
+			   $($element).find('.view-room').attr('placeholder', 'Rooms');
 			   return;
 			}
 			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+$scope.idHotel, {cache:true}).success(function(data) {
