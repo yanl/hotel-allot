@@ -29,9 +29,13 @@ function RoomsCtrl($scope, $http) {
 	$scope.rooms = [];
 }
 
-function RoomAllocsCtrl($scope) {
-	$scope.allocs = [{selected: false, id:0, hotelName:'Shandrany Resorts & Spa', roomName:'Deluxe', units:1, release:'', days:8, releaseDate:null, comment:'This is a comment'}, 
-						{selected: true, id:0, hotelName:'Shandrany Resorts & Spa', roomName:'Prestige Villa', units:1, release:'', days:8, releaseDate:null, comment:'This is a comment'}];
+function RoomAllocsCtrl($scope, $http) {
+	//[{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":0,"client":"None","actionType":"None","idHotel":4560,"id":20,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":0,"client":"None","actionType":"Booking","idHotel":4560,"id":21,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"None","actionType":"Booking","idHotel":4560,"id":22,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"Test","actionType":"Booking","idHotel":4560,"id":23,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"November, 21 2011 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"Test","actionType":"Booking","idHotel":4560,"id":24,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"}]
+	
+	$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs', {cache:true}).success(function(data) {
+		$scope.allocs = data;
+	});
+	
 	$scope.gridOptions = {
 		data: 'allocs',
 		jqueryUITheme: false,
@@ -45,7 +49,7 @@ function RoomAllocsCtrl($scope) {
 		},
         columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
                      { field: 'roomName',  displayName: 'Room', width: 100 },
-                     { field: 'units', width: 40,},
-                     { field: 'days', width: 40}]
+                     { field: 'units', displayName: 'Units', width: 40,},
+                     { field: 'days', displayName: 'Days', width: 40}]
 		};
 }
