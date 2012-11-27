@@ -1,14 +1,14 @@
 <div>
 	<label class="control-label block-label" for="view-to">Hotel</label>
 	<div class="controls controls-block">
-		<select ui-select2 id="view-hotel" ng-model="idHotel" data-placeholder="Hotel" ng-change="hotelChange(idHotel)"> <!--ui-select2-->
+		<select ui-select2 class="view-hotel" ng-model="idHotel" data-placeholder="Hotel" ng-change="hotelChange(idHotel)"> <!--ui-select2-->
 			<option></option>
 			<option ng-repeat="hotel in hotels" value="{{hotel.id}}">{{hotel.name}}</option>
 		</select>
 	</div>
 	<label class="control-label block-label" for="view-to">Room</label>
 	<div class="controls controls-block">
-		<select ui-select2="{formatResult:roomFormat, formatSelection:roomFormatSel}" id="view-hotel" ng-model="idRoom" data-placeholder="Room">
+		<select ui-select2="{formatResult:roomFormat, formatSelection:roomFormatSel}" class="view-room" ng-model="idRoom" data-placeholder="Room">
 			<option></option>
 			<option ng-repeat="room in rooms" value="{{room.id}}" data-cat="{{room.cat}}" data-occupancy="{{room.occupancy}}" data-meal="{{room.meal}}">
 				{{room.name}}
