@@ -19,12 +19,7 @@ angular.module('components', []).
 			}
 			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+$scope.idHotel, {cache:true}).success(function(data) {
 			   $scope.rooms = data;
-			   var placeholder = 'No rooms found';
-			   if ($scope.rooms.length) {
-				  placeholder = $scope.rooms.length + ' rooms';
-			   }
-			   //console.log();
-			   $($element).find('.view-room').attr('placeholder', placeholder);
+			   // todo: update place-holder with # of rooms or "no rooms found"
 			});
 		 };
 		 
