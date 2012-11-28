@@ -6,14 +6,14 @@
 			<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
 			<div class="controls">
 			  <div class="input-append">
-				<input id="view-from" name="viewFrom" type="text" ng-model="dateFrom" ui-date>
+				<input id="view-from" name="viewFrom" type="text" ng-model="filter.dateFrom" ui-date>
 				<span class="add-on"><i class="icon-calendar"></i></span>
 			  </div>
 			</div>
 			<label class="control-label" for="view-to">To</label>
 			<div class="controls">
 			  <div class="input-append">
-				<input id="view-to" type="text" ng-model="dateTo" ui-date>
+				<input id="view-to" type="text" ng-model="filter.dateTo" ui-date>
 				<span class="add-on"><i class="icon-calendar"></i></span>
 			  </div>
 			</div>
@@ -21,8 +21,8 @@
 		  </div>
 		  <div class="form-actions">
 			<div class="btn-group">
-				<button id="filter-btn" class="btn btn-primary" title="Filter View"><i class="icon-search icon-white"></i> Filter</button>
-				<button class="btn" title="Clear Filtering" ui-jq="tooltip"><i class="icon-remove-sign"></i></button>
+				<button id="filter-btn" class="btn btn-primary" title="Filter View" ng-click="applyFilter()"><i class="icon-search icon-white"></i> Filter</button>
+				<button class="btn" title="Clear Filtering" ui-jq="tooltip" ng-click="clearFilter()"><i class="icon-remove-sign"></i></button>
 			</div>
 		  </div>
 	  </form>
@@ -33,14 +33,14 @@
 	<legend>Manage Allocations</legend>
 	
 	<div>
-		<p><i class="icon-search"></i> Viewing from {{dateFrom | date: 'mediumDate'}} to {{dateTo | date: 'mediumDate'}}</p>
+		<p><i class="icon-search"></i> Viewing from {{filter.dateFrom | date: 'mediumDate'}} to {{filter.dateTo | date: 'mediumDate'}}</p>
 	</div>
 
 	<!--<tabs>
 	<pane title="foo">foo</pane>
 	<pane title="bar">bar</pane>
 	</tabs>-->
-	<div ng-controller="RoomAllocsCtrl"> <!--class="table table-hover table-bordered table-condensed table-striped"-->
+	<div> <!--class="table table-hover table-bordered table-condensed table-striped"-->
 		<div ui-modal class="fade" ng-model="modalAdd" id="myModal">
 			<div ng-include src="'partials/add.html'"></div>
 		</div>

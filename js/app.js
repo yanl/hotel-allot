@@ -10,15 +10,15 @@ angular.module('components', []).
 		 $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
 			$scope.hotels = data;
 		 });
-		 $scope.hotelChange = function() {
-			if (!$scope.idHotel) {
+		 $scope.hotelChange = function(idHotel) {
+			if (!idHotel) {
 			   $scope.idHotel = null;
 			   $scope.idRoom = null;
 			   $scope.rooms = null;
 			   $($element).find('.view-room').attr('placeholder', 'Rooms');
 			   return;
 			}
-			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+$scope.idHotel, {cache:true}).success(function(data) {
+			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
 			   $scope.rooms = data;
 			   var placeholder = 'No rooms found';
 			   if ($scope.rooms.length) {
@@ -28,8 +28,8 @@ angular.module('components', []).
 			});
 		 };
 		 
-		 $scope.roomChange = function() {
-			if (!$scope.idRoom) {
+		 $scope.roomChange = function(idRoom) {
+			if (idRoom) {
 			   $scope.idRoom = null;
 			   return;
 			}

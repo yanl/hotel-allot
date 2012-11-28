@@ -1,5 +1,53 @@
-function ManageCtrl($scope, $routeParams) {
+function ManageCtrl($scope, $routeParams, $http, $filter) {
+	var self = this;
+	$scope.filter = {idFilter:null, dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+	$scope.applyFilter = function() {
+		self.getData($scope.filter);
+		//console.log('Filter Alloc', $scope);
+	}
+	$scope.clearFilter = function() {
+		$scope.filter = {dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+		self.getData($scope.filter);
+	}
+	
+	self.getData = function(args) {
+		var argsOut = '';
+		if (typeof args === 'object') {
+			angular.forEach(args, function(e, v) {
+				if (e) {
+					switch (v) {
+						case 'dateFrom':
+						case 'dateTo':
+							e =  $filter('date')(e,'yyyy-MM-dd');
+						break;
+					}
+					argsOut += '&' + v + '=' + e;
+				}
+			});
+		}
+		console.log('argsOut', argsOut);
+		$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs'+argsOut, {cache:true}).success(function(data) {
+			self.allocs = data;
+			$scope.filteredAllocs = self.allocs;
+		});
+	}
 
+	//$scope.$watch('filter', function(e) {
+	//	console.log('*watch trigger', e);
+	//	self.getData(e);
+	//}, true);
+	
+	$scope.gridOptions = {
+		data: 'filteredAllocs',
+		jqueryUITheme: false,
+		showColumnMenu: false,
+		enablePaging: false,
+        columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
+                     { field: 'roomName',  displayName: 'Room', width: 100 },
+                     { field: 'dateFrom', displayName: 'From', width: 75,},
+                     { field: 'dateTo', displayName: 'To', width: 75}]
+	};
+	self.getData();
 }
 
 function ViewCtrl($scope, $routeParams) {
@@ -7,7 +55,7 @@ function ViewCtrl($scope, $routeParams) {
 }
 
 function NavCtrl($scope, $location) {
-	$scope.navClass = function (page) {
+	$scope.navClass = function(page) {
         var currentRoute = $location.path().substring(1) || 'view';
 		//console.log('currentroute', currentRoute);
         return page === currentRoute ? 'active' : '';
@@ -21,6 +69,7 @@ function HotelsCtrl($scope, $http) {
 	});
 	$scope.change = function() {};
 }
+
 function RoomsCtrl($scope, $http) {
 	//var data = [{"occupancy":"DOUBLE","name":"SUPERIOR ROOMDOUBLEAll Inclusive","id":2629,"meal":"All Inclusive","cat":"SUPERIOR ROOM"},{"occupancy":"SINGLE","name":"SUPERIOR ROOMSINGLEAll Inclusive","id":2630,"meal":"All Inclusive","cat":"SUPERIOR ROOM"},{"occupancy":"DOUBLE","name":"DELUXE ROOMDOUBLEAll Inclusive","id":2631,"meal":"All Inclusive","cat":"DELUXE ROOM"},{"occupancy":"SINGLE","name":"DELUXE ROOMSINGLEAll Inclusive","id":2632,"meal":"All Inclusive","cat":"DELUXE ROOM"},{"occupancy":"2 ADTS & 3 CHDS","name":"FAMILY APARTMENT2 ADTS & 3 CHDSAll Inclusive","id":2633,"meal":"All Inclusive","cat":"FAMILY APARTMENT"},{"occupancy":"DOUBLE","name":"SENIOR SUITEDOUBLEAll Inclusive","id":2634,"meal":"All Inclusive","cat":"SENIOR SUITE"},{"occupancy":"SINGLE","name":"SENIOR SUITESINGLEAll Inclusive","id":2635,"meal":"All Inclusive","cat":"SENIOR SUITE"},{"occupancy":"2 ADTS & 3 CHDS","name":"FAMILY SUITE2 ADTS & 3 CHDSAll Inclusive","id":2636,"meal":"All Inclusive","cat":"FAMILY SUITE"},{"occupancy":"PER PERSON","name":"DAY USEPER PERSONAll Inclusive","id":2986,"meal":"All Inclusive","cat":"DAY USE"},{"occupancy":"DOUBLE","name":"SUPERIOR ROOM BEACHDOUBLEAll Inclusive","id":3313,"meal":"All Inclusive","cat":"SUPERIOR ROOM BEACH"},{"occupancy":"SINGLE","name":"SUPERIOR ROOM BEACHSINGLEAll Inclusive","id":3314,"meal":"All Inclusive","cat":"SUPERIOR ROOM BEACH"},{"occupancy":"DOUBLE","name":"LATE CHECK OUT UNTIL 18HRSDOUBLEAll Inclusive","id":3750,"meal":"All Inclusive","cat":"LATE CHECK OUT UNTIL 18HRS"},{"occupancy":"DOUBLE","name":"LATE CHECK OUTDOUBLEAll Inclusive","id":3784,"meal":"All Inclusive","cat":"LATE CHECK OUT"},{"occupancy":"SINGLE","name":"LATE CHECK OUTSINGLEAll Inclusive","id":3785,"meal":"All Inclusive","cat":"LATE CHECK OUT"},{"occupancy":"PER ROOM","name":"ROOM CANCELLATIONPER ROOMNone","id":3786,"meal":"None","cat":"ROOM CANCELLATION"},{"occupancy":"VISIT","name":"INSPECTIONVISITNone","id":3857,"meal":"None","cat":"INSPECTION"}];
 	$http.get('/DMS/components/hotel_allot.cfc?method=getRooms', {cache:true}).success(function(data) {
@@ -29,27 +78,7 @@ function RoomsCtrl($scope, $http) {
 	$scope.rooms = [];
 }
 
-function RoomAllocsCtrl($scope, $http) {
+function RoomAllocsCtrl($scope, $http, $filter) {
 	//[{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":0,"client":"None","actionType":"None","idHotel":4560,"id":20,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":0,"client":"None","actionType":"Booking","idHotel":4560,"id":21,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"None","actionType":"Booking","idHotel":4560,"id":22,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"December, 31 9999 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"Test","actionType":"Booking","idHotel":4560,"id":23,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"},{"dateFrom":"November, 21 2011 00:00:00","roomName":"FAMILY  ROOM 3\/4 PAX","idRoom":1863,"idAgency":120,"client":"Test","actionType":"Booking","idHotel":4560,"id":24,"dateTo":"December, 31 9999 00:00:00","hotelName":"20 DEGRES SUD"}]
-	
-	$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs', {cache:true}).success(function(data) {
-		$scope.allocs = data;
-	});
-	
-	$scope.gridOptions = {
-		data: 'allocs',
-		jqueryUITheme: false,
-		showColumnMenu: false,
-		enablePaging: false,
-		pagingOptions: {
-			pageSizes: [1, 5, 10], //page Sizes
-			pageSize: 1, //Size of Paging data
-			totalServerItems: 0, //of how many items are on the server (for paging)
-			currentPage: 1, //of what page they are currently on
-		},
-        columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
-                     { field: 'roomName',  displayName: 'Room', width: 100 },
-                     { field: 'dateFrom', displayName: 'From', width: 75,},
-                     { field: 'dateTo', displayName: 'To', width: 75}]
-		};
+
 }
