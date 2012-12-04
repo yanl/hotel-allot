@@ -3,21 +3,26 @@ angular.module('components', []).
     return {
       restrict: 'E',
       transclude: true,
-      scope: {},
+      scope: {hotelModel:'='},
       controller: function($scope, $element, $http) {
 		 $scope.idHotel = null;
 		 $scope.idRoom = null;
 		 $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
 			$scope.hotels = data;
 		 });
+		 // add linking function
 		 $scope.hotelChange = function(idHotel) {
 			if (!idHotel) {
 			   $scope.idHotel = null;
 			   $scope.idRoom = null;
 			   $scope.rooms = null;
+			   //$scope.filter.idHotel = null;
+			   hotelModel = null;
 			   $($element).find('.view-room').attr('placeholder', 'Rooms');
 			   return;
 			}
+			hotelModel = idHotel;
+			//$scope.filter.idHotel = idHotel;
 			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
 			   $scope.rooms = data;
 			   var placeholder = 'No rooms found';

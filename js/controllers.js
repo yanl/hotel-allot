@@ -1,6 +1,7 @@
 function ManageCtrl($scope, $routeParams, $http, $filter) {
 	var self = this;
-	$scope.filter = {idFilter:null, dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+	$scope.filter = {idFilter:null, dateFrom:null, dateTo:null, idHotel:0, idRoom:null};
+	$scope.foo = 0;
 	$scope.applyFilter = function() {
 		self.getData($scope.filter);
 		//console.log('Filter Alloc', $scope);
@@ -25,7 +26,7 @@ function ManageCtrl($scope, $routeParams, $http, $filter) {
 				}
 			});
 		}
-		console.log('argsOut', argsOut);
+		console.log('argsOut', argsOut, args);
 		$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs'+argsOut, {cache:true}).success(function(data) {
 			self.allocs = data;
 			$scope.filteredAllocs = self.allocs;
