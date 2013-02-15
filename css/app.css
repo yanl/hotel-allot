@@ -4,6 +4,14 @@ body {
 .controls {
 	margin-bottom: 5px;
 }
+.controls label {
+	display: inline;
+	padding-top: 2px;
+}
+.controls input[type=radio] {
+	margin-top: -4px;
+	margin-right: 4px;
+}
 .select2-container, .select2-result-label {
 	font-size: 10px;
 }
@@ -110,6 +118,9 @@ table input[type="checkbox"] {
 	clear: both;
 	margin-left: 0 !important;
 }
+.controls-block {
+	display: block;
+}
 .sidebar-nav .controls-block select, .sidebar-nav .controls-block .select2-container {
 	width: 176px;
 }
@@ -127,5 +138,11 @@ table input[type="checkbox"] {
 }
 
 #addModal select, #addModal .select2-container {
-	width: 100%;
+	width: 243px; /*100%;*/
+}
+#addModal .controls [class*="span"] {
+	margin-left: 0px;
+}
+#addModal #release-date {
+	width: 93px;
 }

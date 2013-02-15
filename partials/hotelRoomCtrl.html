@@ -8,12 +8,11 @@
 	</div>
 	<label class="control-label block-label" for="view-to">Room</label>
 	<div class="controls controls-block">
-		<select ui-select2="{formatResult:roomFormat, formatSelection:roomFormatSel}" class="view-room" ng-model="idRoom" data-placeholder="Room">
+		<select ui-select2="{formatResult:roomFormat, formatSelection:roomFormatSel}" class="view-room" ng-model="idRoom" data-placeholder="Room" ng-change="roomChange(idRoom)">
 			<option></option>
 			<option ng-repeat="room in rooms" value="{{room.id}}" data-cat="{{room.cat}}" data-occupancy="{{room.occupancy}}" data-meal="{{room.meal}}">
 				{{room.name}}
 			</option>
 		</select>
 	</div>
-	{{hotelModel}}
 </div>

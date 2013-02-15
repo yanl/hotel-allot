@@ -17,24 +17,26 @@
 				<span class="add-on"><i class="icon-calendar"></i></span>
 			  </div>
 			</div>
-			{{foo}}
-			<hotelrooms id="hotel-room" hotel-model="foo"/>
+			<hotelrooms id="hotel-room" hotel-model="filter.idHotel" room-model="filter.idRoom"/> <!--  -->
 		  </div>
 		  <div class="form-actions">
 			<div class="btn-group">
 				<button id="filter-btn" class="btn btn-primary" title="Filter View" ng-click="applyFilter()"><i class="icon-search icon-white"></i> Filter</button>
-				<button class="btn" title="Clear Filtering" ui-jq="tooltip" ng-click="clearFilter()"><i class="icon-remove-sign"></i></button>
+				<button id="filter-clear-btn" class="btn" title="Clear Filtering" ui-jq="tooltip" ng-click="clearFilter()" ng-disabled="!filter.enable"><i class="icon-remove-sign"></i></button>
 			</div>
 		  </div>
 	  </form>
 	</div>
 </div>
-
 <div class="span8">
 	<legend>Manage Allocations</legend>
 	
-	<div>
-		<p><i class="icon-search"></i> Viewing from {{filter.dateFrom | date: 'mediumDate'}} to {{filter.dateTo | date: 'mediumDate'}}</p>
+	<div ng-show="filter.enable">
+		<p>
+			<i class="icon-search"></i> Viewing
+			<span ng-show="filter.dateFrom">from <span class="label">{{filter.dateFrom | date: 'mediumDate'}}</span></span>
+			<span ng-show="filter.dateTo">to <span class="label">{{filter.dateTo | date: 'mediumDate'}}</span></span>
+		</p>
 	</div>
 
 	<!--<tabs>
@@ -46,11 +48,14 @@
 			<div ng-include src="'partials/add.html'"></div>
 		</div>
 		<div ng-grid="gridOptions"></div>
-	
 		<div class="navbar no-bg pull-right">
-			<button class="btn" title="Delete Selected" ui-jq="tooltip" disabled><i class="icon-remove"></i></button>
+			<button class="btn" title="Edit Selected" ui-jq="tooltip" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
+			<button class="btn" title="Delete Selected" ui-jq="tooltip" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
 			<a class="btn" ng-click="modalAdd=true" title="Add a New Allot." ui-jq="tooltip"><i class="icon-plus"></i></a>
 			<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
 		</div>
+		<!--<div>
+			{{selectedAlloc}}
+		</div>-->
 	</div>
 </div>

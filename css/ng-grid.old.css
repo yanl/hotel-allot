@@ -1,4 +1,4 @@
-
+﻿
 /******** Grid Global ********/
 .nglabel {
     display: block;
@@ -6,10 +6,24 @@
     font-weight: bold;
     padding-right: 5px;
 }
+.ngNoSelect{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 /******** Grid ********/
 
 .ngGrid{
-    background-color: rgb(253, 253, 253);  
+    background-color: rgb(253, 253, 253);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 /******** Header ********/
@@ -86,8 +100,7 @@
 }
 
 .ngTopPanel {
-    position: relative;	
-	z-index:5;
+    position: relative;
     background-color: rgb(234, 234, 234);
 	border-bottom: 1px solid rgb(212,212,212);
 }
@@ -103,17 +116,17 @@
 .ngHeaderSortColumn{
 	position:absolute;
     overflow: hidden;
+	cursor: pointer;
 }
 
 .ngHeaderCell{
 	border-left: 1px solid rgb(212,212,212);
     position: absolute;
-    top: 0; 
-    bottom: 0; 
+    cursor: pointer;
 }
 
 .ngHeaderCell:first-child{
-    border-left: 0;
+	border-left: 0px;
 }
 
 .ngHeaderCell:last-child{
@@ -153,13 +166,10 @@
     top: 0; 
     height: 100%; 
     position: absolute; 
-    z-index: 5; 
+    z-index: 1000; 
 }
 .ngHeaderText {
-    padding: 5px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    margin-left: 5px;
     white-space: nowrap;
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
@@ -169,8 +179,8 @@
 
 /******** Viewport ********/
 .ngViewport{
+    background-color: rgb(255, 255, 255);
 	overflow: auto;
-    min-height: 20px;
 }
 
 .ngCanvas{
@@ -181,6 +191,7 @@
 .ngRow {
     position: absolute;
     border-bottom: 1px solid rgb(229, 229, 229);
+    cursor: pointer;
 }
 .ngRow.even {
     background-color: rgb(243, 243, 243);
@@ -189,7 +200,7 @@
     background-color: rgb(253, 253, 253);
 }
 .ngRow.selected {
-    background-color: rgb(201, 221, 225);
+    background-color: rgb(189, 208, 203);
 }
 .ngRow.canSelect {
     cursor: pointer;
@@ -201,28 +212,19 @@
     overflow: hidden; 
     position: absolute;
 	border-left: 1px solid rgb(212,212,212);
-    top: 0; 
-    bottom: 0; 
 }
 
 .ngCell:first-child{
-	border-left: 0;
+	border-left: 0px;
 }
 
 .ngCell:last-child {
     border-right: 1px solid rgb(212,212,212);
 }
 
-.ngCellElement:focus {
-	outline: 0;
-    background-color: rgb(179, 196, 199);
-}
-
 .ngCellText {
-    padding: 5px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    margin-left: 5px;
+    margin-top: 5px;
     white-space: nowrap;
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
@@ -278,7 +280,7 @@ input {
 }
 .ngAggregate {
     position: absolute;
-    background-color: rgb(201, 221, 225);
+    background-color: rgb(179, 191, 188);
     border-bottom: 1px solid beige;
     overflow: hidden;
     top: 0;
@@ -323,7 +325,7 @@ input {
     border-radius: 50%;
     width: 14px;
     height: 14px;
-    z-index: 5;
+    z-index: 10000;
     background-color: rgb(179, 191, 188);
     cursor: pointer;
     /* width and height can be anything, as long as they're equal */
@@ -340,16 +342,14 @@ input {
     /* width and height can be anything, as long as they're equal */
 }
 .ngColMenu {
-    right: 2px;
-    padding: 5px;
-    top: 25px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #BDD0CB;
-    position: absolute;
-    border: 2px solid rgb(212,212,212);
-    z-index: 5;
+	right: 2px;
+	padding: 5px;
+	top: 25px;
+	border-radius: 3px;
+	background-color: #BDD0CB;
+	position: absolute;
+	border: 5px solid rbg(212,212,212);
+	z-index: 50000;
 }
 .ngMenuText {
     position: relative;
@@ -380,8 +380,8 @@ input {
 }
 
 .ngPagerFirstTriangle{
-	width: 0;
-	height: 0;
+	width: 0px;
+	height: 0px;
 	border-style: solid;
 	border-width: 5px 8.7px 5px 0;
 	border-color: transparent #000000 transparent transparent;
@@ -397,8 +397,8 @@ input {
 }	
 
 .ngPagerLastTriangle{
-	width: 0;
-	height: 0;
+	width: 0px;
+	height: 0px;
 	border-style: solid;
 	border-width: 5px 0 5px 8.7px;
 	border-color: transparent transparent transparent #000000;
@@ -414,34 +414,9 @@ input {
 }	
 
 .ngPagerPrevTriangle{
-	margin-left: 0;
+	margin-left: 0px;
 }	
 
 .ngPagerNextTriangle{
 	margin-left: 1px;
-}
-.ngGroupIcon {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAEFJREFUKFNjoAhISkr+h2J5JDZODNXGwGBsbPwfhIGAA8bGh6HaGBiAGhxAGJmND4M1gQCSM0adCsVQbcPcqQwMALWDGyDvWPefAAAAAElFTkSuQmCC);
-	background-repeat:no-repeat;
-    height: 15px;
-    width: 15px;
-    position: absolute;
-    right: -2px;
-    top: 2px;
-}
-
-.ngGroupedByIcon {
-	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAElJREFUKFNjoAhISkr+R8LyaHwMDNXGwGBsbPwfhoGAA5mPDUO1oWpE52PDYE0gALTFAYbR+dgwWBMIoPlh1I9ADNU2NPzIwAAAFQYI9E4OLvEAAAAASUVORK5CYII=);
-	background-repeat:no-repeat;
-    height: 15px;
-    width: 15px;
-    position: absolute;
-    right: -2px;
-    top: 2px;
-}
-
-.ngGroupingNumber {
-    position: absolute;
-    right: -10px;
-    top: -2px;
 }

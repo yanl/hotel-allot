@@ -1,16 +1,34 @@
-function ManageCtrl($scope, $routeParams, $http, $filter) {
+function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, Allot) {
 	var self = this;
-	$scope.filter = {idFilter:null, dateFrom:null, dateTo:null, idHotel:0, idRoom:null};
-	$scope.foo = 0;
+	$scope.filter = {enable: false, idFilter:null, dateFrom:null, dateTo:null, idHotel:0, idRoom:0};
+	$scope.foo = 2;
+	$scope.selectedAlloc = [];
+	$scope.filteredAllocs = Allot.query();
+	console.log('Allot', Allot);
+	//$(Document).on('change', function(e) {
+	//	self.refresh();
+	//});
+	$scope.$on('change', function(n, o) {
+		console.log('event catched!');
+		$scope.refresh();
+	});
 	$scope.applyFilter = function() {
+		if (!($scope.filter.dateFrom || $scope.filter.dateTo || $scope.filter.idHotel || $scope.filter.idRoom)) {
+			$scope.clearFilter();
+		}
+		$scope.filter.enable = true;
 		self.getData($scope.filter);
 		//console.log('Filter Alloc', $scope);
 	}
 	$scope.clearFilter = function() {
-		$scope.filter = {dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+		$scope.filter = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
 		self.getData($scope.filter);
+		$('#filter-clear-btn').tooltip('hide');
 	}
-	
+	$scope.refresh = function () {
+		console.log('refreshing ...');
+		$scope.filteredAllocs = Allot.query(false);
+	}
 	self.getData = function(args) {
 		var argsOut = '';
 		if (typeof args === 'object') {
@@ -26,11 +44,12 @@ function ManageCtrl($scope, $routeParams, $http, $filter) {
 				}
 			});
 		}
-		console.log('argsOut', argsOut, args);
-		$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs'+argsOut, {cache:true}).success(function(data) {
-			self.allocs = data;
-			$scope.filteredAllocs = self.allocs;
-		});
+		//console.log('argsOut', argsOut, args);
+		//console.log('$scope.filteredAllocs', $scope.filteredAllocs);
+		//$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs'+argsOut, {cache:true}).success(function(data) {
+		//	self.allocs = data;
+		//	$scope.filteredAllocs = self.allocs;
+		//});
 	}
 
 	//$scope.$watch('filter', function(e) {
@@ -43,6 +62,7 @@ function ManageCtrl($scope, $routeParams, $http, $filter) {
 		jqueryUITheme: false,
 		showColumnMenu: false,
 		enablePaging: false,
+		selectedItems: $scope.selectedAlloc,
         columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
                      { field: 'roomName',  displayName: 'Room', width: 100 },
                      { field: 'dateFrom', displayName: 'From', width: 75,},
@@ -51,8 +71,74 @@ function ManageCtrl($scope, $routeParams, $http, $filter) {
 	self.getData();
 }
 
+function AddCtrl($scope, $rootScope, $http, Allot) {
+	$scope.allot = {};
+	$scope.allot.type = 'allotement';
+	$scope.allot.from = null;
+	$scope.allot.to = null;
+	$scope.allot.idHotel = null;
+	$scope.allot.idRoom = null;
+	$scope.allot.releaseType = 'days';
+	$scope.valid = false;
+	$scope.isLoading = '';
+	$scope.save = function() {
+		$scope.isLoading = 'loading';
+		var allot = {
+			type: $scope.allot.type,
+			from: $scope.allot.from,
+			to: $scope.allot.to,
+			idHotel: $scope.allot.idHotel,
+			idRoom: $scope.allot.idRoom,
+			releaseType: $scope.allot.releaseType
+		};
+		Allot.save(allot).then(function(e) {
+			$scope.isLoading = '';
+			$scope.$emit('change');
+		});
+	}
+}
+
 function ViewCtrl($scope, $routeParams) {
+	$scope.filter = {enable: false, idFilter:null, dateFrom:null, dateTo:null, idHotel:0, idRoom:0};
+	$scope.applyFilter = function() {
+		if (!($scope.filter.dateFrom || $scope.filter.dateTo || $scope.filter.idHotel || $scope.filter.idRoom)) {
+			$scope.clearFilter();
+		}
+		$scope.filter.enable = true;
+		self.getData($scope.filter);
+		//console.log('Filter Alloc', $scope);
+	}
+	$scope.clearFilter = function() {
+		$scope.filter = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+		self.getData($scope.filter);
+		$('#filter-clear-btn').tooltip('hide');
+	}
+}
+
+function CalendarCtrl($scope) {
+	var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+    
+   $scope.events = [
+            {title: 'All Day Event',start: new Date(y, m, 1),url: 'http://www.angularjs.org'},
+            {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
+            {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
+            {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: true}];
 	
+	$scope.eventsSource = [$scope.events];
+    $scope.addChild = function() {
+      $scope.events.push({
+        title: 'Open Sesame',
+        start: new Date(y, m, 28),
+        end: new Date(y, m, 29)
+      });
+    }
+ 
+    $scope.remove = function(index) {
+      $scope.events.splice(index,1);
+    }
 }
 
 function NavCtrl($scope, $location) {

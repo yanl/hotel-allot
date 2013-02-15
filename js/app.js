@@ -3,13 +3,14 @@ angular.module('components', []).
     return {
       restrict: 'E',
       transclude: true,
-      scope: {hotelModel:'='},
-      controller: function($scope, $element, $http) {
+      scope: {hotelModel:'=', roomModel:'='}, //
+      controller: function($scope, $element, $http, Hotel) {
 		 $scope.idHotel = null;
 		 $scope.idRoom = null;
-		 $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
-			$scope.hotels = data;
-		 });
+		 $scope.hotels = Hotel.query();
+		// $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
+		//	$scope.hotels = data;
+		// });
 		 // add linking function
 		 $scope.hotelChange = function(idHotel) {
 			if (!idHotel) {
@@ -17,11 +18,14 @@ angular.module('components', []).
 			   $scope.idRoom = null;
 			   $scope.rooms = null;
 			   //$scope.filter.idHotel = null;
-			   hotelModel = null;
+			   try {
+				  $scope.hotelModel = null;
+			   } catch (e) {}
 			   $($element).find('.view-room').attr('placeholder', 'Rooms');
 			   return;
 			}
-			hotelModel = idHotel;
+			$scope.hotelModel = idHotel;
+			//console.log($scope.hotelModel);
 			//$scope.filter.idHotel = idHotel;
 			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
 			   $scope.rooms = data;
@@ -34,13 +38,16 @@ angular.module('components', []).
 		 };
 		 
 		 $scope.roomChange = function(idRoom) {
-			if (idRoom) {
+			if (!idRoom) {
 			   $scope.idRoom = null;
+			   $scope.roomModel = null;
 			   return;
 			}
+			$scope.roomModel = idRoom;
 		 }
 		 $scope.roomFormatSel = function(room) {
 			var e = $(room.element);
+			return e.data('cat') + ' ' + e.data('occupancy') + ' ' + e.data('meal');
 			return '<span class="sRoom"><span>' + e.data('cat') + '</span>' + '<span class="srDetails">'+e.data('occupancy')+' '+e.data('meal')+'</span></span>';
 		 }
 		 $scope.roomFormat = function(room) {
@@ -105,7 +112,7 @@ angular.module('components', []).
     };
   })
   
-var app = angular.module('hotelAllot',['ui', 'ngGrid', 'components'] )
+var app = angular.module('hotelAllot',['ui', 'ngGrid', 'components', 'allotServices'] )
 .config(['$routeProvider', function($routeProvider) {
 $routeProvider
    .when('/manage/:action', {templateUrl:'partials/manage.html', controller:ManageCtrl})
