@@ -3,6 +3,14 @@
 	  <legend>Filter</legend>
 	  <form name="filterForm" class="form-horizontal">
 		  <div class="control-group">
+		  	<label class="control-label" for="view-type">Type</label>
+			<div class="controls">
+				<select ui-select2 class="view-type" ng-model="filter.type" data-placeholder="All">
+					<option value=""></option>
+					<option value="allotment">Allotment</option>
+					<option value="stopSales">Stop Sales</option>
+				</select>
+			</div>
 			<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
 			<div class="controls">
 			  <div class="input-append">
@@ -39,19 +47,12 @@
 		</p>
 	</div>
 
-	<!--<tabs>
-	<pane title="foo">foo</pane>
-	<pane title="bar">bar</pane>
-	</tabs>-->
 	<div> <!--class="table table-hover table-bordered table-condensed table-striped"-->
-		<div ui-modal class="fade" ng-model="modalAdd" id="myModal">
-			<div ng-include src="'partials/add.html'"></div>
-		</div>
-		<div ng-grid="gridOptions"></div>
+		<div class="gridStyle" ng-grid="gridOptions"></div>
 		<div class="navbar no-bg pull-right">
 			<button class="btn" title="Edit Selected" ui-jq="tooltip" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
 			<button class="btn" title="Delete Selected" ui-jq="tooltip" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
-			<a class="btn" ng-click="modalAdd=true" title="Add a New Allot." ui-jq="tooltip"><i class="icon-plus"></i></a>
+			<a class="btn" ng-click="showAdd()" title="Add a New Allot." ui-jq="tooltip"><i class="icon-plus"></i></a>
 			<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
 		</div>
 		<!--<div>

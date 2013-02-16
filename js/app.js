@@ -4,7 +4,7 @@ angular.module('components', []).
       restrict: 'E',
       transclude: true,
       scope: {hotelModel:'=', roomModel:'='}, //
-      controller: function($scope, $element, $http, Hotel) {
+      controller: function($scope, $element, $http, Hotel, Room) {
 		 $scope.idHotel = null;
 		 $scope.idRoom = null;
 		 $scope.hotels = Hotel.query();
@@ -27,14 +27,23 @@ angular.module('components', []).
 			$scope.hotelModel = idHotel;
 			//console.log($scope.hotelModel);
 			//$scope.filter.idHotel = idHotel;
-			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
-			   $scope.rooms = data;
-			   var placeholder = 'No rooms found';
-			   if ($scope.rooms.length) {
-				  placeholder = $scope.rooms.length + ' rooms';
-			   }
-			   $($element).find('.view-room').attr('placeholder', placeholder);
-			});
+      var placeholder = 'No rooms found';
+      Room.query(idHotel).then(function(e) {
+        $scope.rooms = e;
+        if ($scope.rooms.length) {
+          placeholder = $scope.rooms.length + ' rooms';
+        }
+        $($element).find('.view-room').attr('placeholder', placeholder);
+      });
+
+			// $http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
+			//    $scope.rooms = data;
+			//    var placeholder = 'No rooms found';
+			//    if ($scope.rooms.length) {
+			// 	  placeholder = $scope.rooms.length + ' rooms';
+			//    }
+			//    $($element).find('.view-room').attr('placeholder', placeholder);
+			// });
 		 };
 		 
 		 $scope.roomChange = function(idRoom) {
@@ -112,7 +121,7 @@ angular.module('components', []).
     };
   })
   
-var app = angular.module('hotelAllot',['ui', 'ngGrid', 'components', 'allotServices'] )
+var app = angular.module('hotelAllot',['ui', 'ui.bootstrap', 'ngGrid', 'components', 'allotServices'] )
 .config(['$routeProvider', function($routeProvider) {
 $routeProvider
    .when('/manage/:action', {templateUrl:'partials/manage.html', controller:ManageCtrl})

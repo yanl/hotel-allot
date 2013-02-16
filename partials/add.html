@@ -6,7 +6,7 @@
 			<label class="control-label">Type</label>
 			<div class="controls controls-block">
 			  <select ui-select2 class="view-room" ng-model="allot.type" data-placeholder="Type">
-				  <option value="allotement">Allotement</option>
+				  <option value="allotment">Allotement</option>
 				  <option value="stopSales">Stop Sales</option>
 			  </select>
 			</div>
@@ -58,6 +58,6 @@
 	</div>
 	<div class="navbar no-bg pull-right">
 		<button class="btn btn-primary" title="Add a new room allocation" ng-disabled="valid" id="add-allot" ng-click="save()" ng-class="isLoading"><i class="icon-plus icon-white"></i> ADD</button>
-		<a class="btn" data-dismiss="modal">Cancel</a>
+		<a class="btn" ng-click="close()">Cancel</a>
 	</div>
   </div>
