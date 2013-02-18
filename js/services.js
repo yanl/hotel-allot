@@ -23,7 +23,8 @@ angular.module('allotServices', ['ng'], function($provide) {
 		},
 		save: function(allot) {
 			var d = $q.defer();
-
+			d.resolve(true);
+			return d.promise;
 			$http({
 				method:'POST',
 				url: '/DMS/components/hotel_allot.cfc',

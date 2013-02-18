@@ -146,3 +146,18 @@ table input[type="checkbox"] {
 #addModal #release-date {
 	width: 93px;
 }
+#manage-table {
+	width: 100%;
+	font-size: 16px;
+}
+#manage-table tfoot input {
+	width: 18px;
+	margin-top: 8px;
+	margin-left: 4px;
+	height: 10px;
+}
+#manage-table tfoot select {
+	width: 52px;
+	margin-top: 8px;
+	height: 20px;
+}

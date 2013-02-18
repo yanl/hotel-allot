@@ -7,7 +7,7 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 				{id:2, hotelName:"Le Paradis", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"},
 				{id:4, hotelName:"L'enfer", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"}];
 
-	$scope.$on('change', function(n, o) {
+	$rootScope.$on('change', function(n, o) {
 		console.log('event catched!');
 		$scope.refresh();
 	});
@@ -26,7 +26,10 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	}
 	$scope.refresh = function() {
 		console.log('refreshing ...');
-		$scope.filteredAllocs = Allot.query(false);
+		// We use .then() because this simple version of ng-grid doesn't work with promises
+		Allot.query(false).then(function(e) {
+			$scope.filteredAllocs =  e;//console.log(e);
+		});
 	}
 	$scope.showAdd = function() {
 		var d = $dialog.dialog({
@@ -84,7 +87,7 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	self.getData();
 }
 
-function AddCtrl($scope, Allot) {
+function AddCtrl($scope, $rootScope, Allot) {
 	$scope.allot = {};
 	$scope.allot.type = 'allotment';
 	$scope.allot.from = null;
@@ -106,7 +109,7 @@ function AddCtrl($scope, Allot) {
 		};
 		Allot.save(allot).then(function(e) {
 			$scope.isLoading = '';
-			$scope.$emit('change');
+			$rootScope.$emit('change');
 		});
 	}
 	// $scope.close = function() {
