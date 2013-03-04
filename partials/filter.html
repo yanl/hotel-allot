@@ -1,0 +1,36 @@
+<div class="well sidebar-nav" ng-controller="FilterCtrl">
+  <legend>Filter</legend>
+  <form name="filterForm" class="form-horizontal">
+	  <div class="control-group">
+		<label class="control-label" for="view-type">Type</label>
+		<div class="controls">
+			<select ui-select2 class="view-type" ng-model="filter.type" data-placeholder="All">
+				<option value=""></option>
+				<option value="allotment">Allotment</option>
+				<option value="stopSales">Stop Sales</option>
+			</select>
+		</div>
+		<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
+		<div class="controls">
+		  <div class="input-append">
+			<input id="view-from" name="viewFrom" type="text" ng-model="filter.dateFrom" ui-date>
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		  </div>
+		</div>
+		<label class="control-label" for="view-to">To</label>
+		<div class="controls">
+		  <div class="input-append">
+			<input id="view-to" type="text" ng-model="filter.dateTo" ui-date>
+			<span class="add-on"><i class="icon-calendar"></i></span>
+		  </div>
+		</div>
+		<hotelrooms id="hotel-room" id-hotel="filter.idHotel" id-room="filter.idRoom"/> <!--hotel-model="filter.idHotel" room-model="filter.idRoom"-->
+	  </div>
+	  <div class="form-actions">
+		<div class="btn-group">
+			<button id="filter-btn" class="btn btn-primary" title="Filter View" ng-click="applyFilter()"><i class="icon-search icon-white"></i> Filter</button>
+			<button id="filter-clear-btn" class="btn" title="Clear Filtering" ng-click="clearFilter()" ng-disabled="!filter.enable"><i class="icon-remove-sign"></i></button>
+		</div>
+	  </div>
+  </form>
+</div>

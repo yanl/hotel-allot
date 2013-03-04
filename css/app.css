@@ -1,4 +1,4 @@
-body {
+#view {
 	padding-top: 60px;
 }
 .controls {
@@ -51,7 +51,11 @@ legend {
 	font-weight: bold;
 }
 #calendar {
-	margin-top: 10px;
+	
+}
+#calendar h2 {
+	line-height: 30px;
+	font-size: 20px;
 }
 .navbar p {
 	margin: 10px 0;
@@ -68,6 +72,7 @@ table input[type="checkbox"] {
 .ngGrid {
 	border: 1px solid #D4D4D4;
 	width: 100%;
+	min-height: 278px;
 }
 .selected {
 	background-color: #006DCC !important;
@@ -91,6 +96,9 @@ table input[type="checkbox"] {
 	font-weight: bold;
 	color: #4D4D4D;
 	border-right: 1px solid #D4D4D4;
+}
+.brand i {
+	margin-top: 0px;
 }
 .well {
 	border-radius: 0;
@@ -136,7 +144,19 @@ table input[type="checkbox"] {
 .ngCell {
 	font-size: 11px;
 }
-
+.modal {
+	border-radius: 0 !important;
+}
+.modal h1 {
+	font-size: 16px;
+	line-height: 16px;
+}
+#addModal {
+	border: none !important;
+}
+#addModal .modal-body {
+	max-height: none !important;
+}
 #addModal select, #addModal .select2-container {
 	width: 243px; /*100%;*/
 }
@@ -160,4 +180,17 @@ table input[type="checkbox"] {
 	width: 52px;
 	margin-top: 8px;
 	height: 20px;
+}
+.ngTopPanel {
+	background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2) !important;
+}
+.fc-event-skin {
+	order-color: #8F9AB1 !important;
+	background-color: rgba(128, 182, 250, 0.5) !important;
+}
+.ui-datepicker {
+	z-index: 1051 !important;
+}
+.select2-drop-mask {
+	display: none !important;
 }

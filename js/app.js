@@ -3,56 +3,39 @@ angular.module('components', []).
     return {
       restrict: 'E',
       transclude: true,
-      scope: {hotelModel:'=', roomModel:'='}, //
+      scope: { idHotel:'=', idRoom:'='},
       controller: function($scope, $element, $http, Hotel, Room) {
-		 $scope.idHotel = null;
-		 $scope.idRoom = null;
 		 $scope.hotels = Hotel.query();
-		// $http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:true}).success(function(data) {
-		//	$scope.hotels = data;
-		// });
-		 // add linking function
+		 if ($scope.idHotel) {
+			getRoom($scope.idHotel);
+		 }
+		 function getRoom(idHotel) {
+			var placeholder = 'No rooms found';
+			Room.query(idHotel).then(function(e) {
+			  $scope.rooms = e;
+			  if ($scope.rooms.length) {
+				  if ($scope.rooms.length > 1) {
+					 placeholder = $scope.rooms.length + ' rooms';
+				  } else {
+					 placeholder = '1 room';
+				  }
+			  }
+			  $($element).find('.view-room').attr('placeholder', placeholder);
+			});
+		 }
 		 $scope.hotelChange = function(idHotel) {
 			if (!idHotel) {
 			   $scope.idHotel = null;
 			   $scope.idRoom = null;
 			   $scope.rooms = null;
-			   //$scope.filter.idHotel = null;
-			   try {
-				  $scope.hotelModel = null;
-			   } catch (e) {}
-			   $($element).find('.view-room').attr('placeholder', 'Rooms');
 			   return;
 			}
-			$scope.hotelModel = idHotel;
-			//console.log($scope.hotelModel);
-			//$scope.filter.idHotel = idHotel;
-      var placeholder = 'No rooms found';
-      Room.query(idHotel).then(function(e) {
-        $scope.rooms = e;
-        if ($scope.rooms.length) {
-          placeholder = $scope.rooms.length + ' rooms';
-        }
-        $($element).find('.view-room').attr('placeholder', placeholder);
-      });
-
-			// $http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:true}).success(function(data) {
-			//    $scope.rooms = data;
-			//    var placeholder = 'No rooms found';
-			//    if ($scope.rooms.length) {
-			// 	  placeholder = $scope.rooms.length + ' rooms';
-			//    }
-			//    $($element).find('.view-room').attr('placeholder', placeholder);
-			// });
+			getRoom(idHotel);
 		 };
-		 
 		 $scope.roomChange = function(idRoom) {
 			if (!idRoom) {
 			   $scope.idRoom = null;
-			   $scope.roomModel = null;
-			   return;
 			}
-			$scope.roomModel = idRoom;
 		 }
 		 $scope.roomFormatSel = function(room) {
 			var e = $(room.element);
@@ -72,6 +55,34 @@ angular.module('components', []).
       templateUrl:'partials/hotelRoomCtrl.html',
       replace: true
     };
+  }).
+   directive('filter', function() {
+   return {
+	  require: '^hotelrooms',
+      restrict: 'E',
+      transclude: true,
+      scope: {model:'='}, //
+      controller: function($scope, $rootScope, $element) {
+		 $scope.model = {enable: false, idFilter:null, dateFrom:null, dateTo:null, idHotel:0, idRoom:0};
+		 $scope.applyFilter = function() {
+			if (!($scope.model.dateFrom || $scope.model.dateTo || $scope.model.idHotel || $scope.model.idRoom)) {
+			   $scope.clearFilter();
+			   return;
+			}
+			$scope.model.enable = true;
+			$rootScope.$emit('filterApply', $scope.model);
+			//console.log('Filter Alloc', $scope);
+		 }
+		 $scope.clearFilter = function() {
+			$scope.model = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null};
+			$rootScope.$emit('filterClear', $scope.model);
+			//$('#filter-clear-btn').tooltip('hide');
+		 }
+
+      },
+      templateUrl:'partials/filter.html',
+      replace: true
+   };
   }).
   directive('tabs', function() {
     return {

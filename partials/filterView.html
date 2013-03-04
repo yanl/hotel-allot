@@ -1,0 +1,7 @@
+<div ng-show="filter.enable" ng-controller="FilterViewCtrl">
+	<p>
+		<i class="icon-search"></i> Viewing
+		<span ng-show="filter.dateFrom">from <span class="label">{{filter.dateFrom | date: 'mediumDate'}}</span></span>
+		<span ng-show="filter.dateTo">to <span class="label">{{filter.dateTo | date: 'mediumDate'}}</span></span>
+	</p>
+</div>

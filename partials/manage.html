@@ -1,62 +1,28 @@
-<div class="span3">
-	<div class="well sidebar-nav">
-	  <legend>Filter</legend>
-	  <form name="filterForm" class="form-horizontal">
-		  <div class="control-group">
-		  	<label class="control-label" for="view-type">Type</label>
-			<div class="controls">
-				<select ui-select2 class="view-type" ng-model="filter.type" data-placeholder="All">
-					<option value=""></option>
-					<option value="allotment">Allotment</option>
-					<option value="stopSales">Stop Sales</option>
-				</select>
-			</div>
-			<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
-			<div class="controls">
-			  <div class="input-append">
-				<input id="view-from" name="viewFrom" type="text" ng-model="filter.dateFrom" ui-date>
-				<span class="add-on"><i class="icon-calendar"></i></span>
-			  </div>
-			</div>
-			<label class="control-label" for="view-to">To</label>
-			<div class="controls">
-			  <div class="input-append">
-				<input id="view-to" type="text" ng-model="filter.dateTo" ui-date>
-				<span class="add-on"><i class="icon-calendar"></i></span>
-			  </div>
-			</div>
-			<hotelrooms id="hotel-room" hotel-model="filter.idHotel" room-model="filter.idRoom"/> <!--  -->
-		  </div>
-		  <div class="form-actions">
-			<div class="btn-group">
-				<button id="filter-btn" class="btn btn-primary" title="Filter View" ng-click="applyFilter()"><i class="icon-search icon-white"></i> Filter</button>
-				<button id="filter-clear-btn" class="btn" title="Clear Filtering" ui-jq="tooltip" ng-click="clearFilter()" ng-disabled="!filter.enable"><i class="icon-remove-sign"></i></button>
-			</div>
-		  </div>
-	  </form>
-	</div>
-</div>
 <div class="span8">
 	<legend>Manage Allocations</legend>
 	
-	<div ng-show="filter.enable">
-		<p>
-			<i class="icon-search"></i> Viewing
-			<span ng-show="filter.dateFrom">from <span class="label">{{filter.dateFrom | date: 'mediumDate'}}</span></span>
-			<span ng-show="filter.dateTo">to <span class="label">{{filter.dateTo | date: 'mediumDate'}}</span></span>
-		</p>
-	</div>
+	<div ng-include="'partials/filterView.html'"></div>
 
 	<div> <!--class="table table-hover table-bordered table-condensed table-striped"-->
-		<!-- <div class="gridStyle" ng-grid="gridOptions"></div> -->
-		<table id="manage-table" ng-grid >
+		<div class="gridStyle" ng-grid="gridOptions"></div>
+		<!--<table id="manage-table" class="sortable">
+			<thead>
+				<th></th>
+				<th>Hotel</th>
+				<th>Room</th>
+				<th>From</th>
+				<th>To</th>
+			</thead>
+			<tbody>
             <tr ng-repeat="item in filteredAllocs">
+				<td><input type="checkbox" /></td>
                 <td >{{item.hotelName}}</td>
                 <td >{{item.roomName}}</td>
                 <td width="50">{{item.dateFrom | date }}</td>
                 <td title="To">{{item.dateTo | date}}</td>
             </tr>
-        </table>
+			</tbody>
+        </table>-->
 		<div class="navbar no-bg pull-right">
 			<button class="btn" title="Edit Selected" ui-jq="tooltip" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
 			<button class="btn" title="Delete Selected" ui-jq="tooltip" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
