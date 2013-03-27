@@ -1,68 +1,112 @@
 angular.module('allotServices', ['ng'], function($provide) {
-  $provide.factory('Allot', ['$http', '$q', function($http, $q) {
+  $provide.factory('Allot', ['$http', '$q', '$filter', function($http, $q, $filter) {
 	var self = this;
-	var filter = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null, type:null};
-	var allot = {
-		getFilter: function() {
-		  return filter;
-		},
-		setFilter: function(f) {
-		  filter = f;
-		},
-		query: function(cache) {
-			if (typeof cache === 'undefined') {
-				cache = true;
+	var filter = {enable: true, dateFrom:new Date(), dateTo:null, idHotel:null, idRoom:null, type:null}; //$filter('date')(new Date(), 'MM/dd/yyyy')
+	var selected = [];
+	var isEditMode = false;
+	return {
+	  getTypes: function() {
+		return [{id:'allotment', label:'Allotment'},
+				{id:'stopSales', label:'Stop Sales'},
+				{id:'freeSales', label:'Free Sales'},
+				{id:'booking', label:'Booking'},
+				{id:'tentative', label:'Tentative'}];
+	  },
+	  setEditMode: function(mode) {
+		isEditMode = mode;
+	  },
+	  getEditMode: function() {
+		return isEditMode;
+	  },
+	  getFilter: function() {
+		return filter;
+	  },
+	  setFilter: function(f) {
+		filter = f;
+	  },
+	  getSelected: function() {
+		return selected;
+	  },
+	  setSelected: function(allots) {
+		selected = allots;
+	  },
+	  query: function(cache) {
+		  if (typeof cache === 'undefined') {
+			  cache = true;
+		  }
+		  var d = $q.defer();
+		  var args = '';
+		  if (filter.enable) {
+			cache = false;
+			args = $misc.toArgs(filter);
+			console.log('filtered', args);
+		  }
+		  //Local testing
+		  //d.resolve(
+		  //	[{id:1, hotelName:"Shandrani", roomName: "Ocean View", dateFrom:"01/02/2013", dateTo: "31/02/2013"}, 
+		  //	{id:3, hotelName:"NoCanDo", roomName: "Foobar View", dateFrom:"01/02/2013", dateTo: "31/02/2013"}, 
+		  //	{id:2, hotelName:"Le Paradis", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"},
+		  //	{id:2, hotelName:"L'enfer", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"}]
+		  //);
+		  //return d.promise;
+		  $http.get('/DMS/components/hotel_allot.new.cfc?method=getAllocs'+args, {cache:cache}).success(function(data) {
+			  d.resolve($misc.eval(data));
+			  //console.log(data);
+		  });
+		  return d.promise;
+	  },
+	  save: function(allot) {
+		var d = $q.defer();
+		/*d.resolve(true);
+		return d.promise;*/
+		$http({
+			method:'POST',
+			url: '/DMS/components/hotel_allot.new.cfc',
+			params: {
+				method:"setAllot",
+				argumentCollection:{allot: allot}, 
+				returnFormat:"json"
 			}
-			console.log('filter', filter);
-			var d = $q.defer();
-			  if (filter.enable) {
-			  console.log('**returning local values');
-			  
-			}
-			//Local testing
-			//d.resolve(
-			//	[{id:1, hotelName:"Shandrani", roomName: "Ocean View", dateFrom:"01/02/2013", dateTo: "31/02/2013"}, 
-			//	{id:3, hotelName:"NoCanDo", roomName: "Foobar View", dateFrom:"01/02/2013", dateTo: "31/02/2013"}, 
-			//	{id:2, hotelName:"Le Paradis", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"},
-			//	{id:2, hotelName:"L'enfer", roomName: "Junior x Single Room", dateFrom:"01/02/2013", dateTo: "31/02/2013"}]
-			//);
-			//return d.promise;
-			$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs', {cache:cache}).success(function(data) {
-				d.resolve(data);
-			});
-			return d.promise;
-		},
-		save: function(allot) {
-			var d = $q.defer();
-			d.resolve(true);
-			return d.promise;
-			$http({
-				method:'POST',
-				url: '/DMS/components/hotel_allot.cfc',
-				params: {
-					method:"setAllot",
-					argumentCollection:{allot: allot}, 
-					returnFormat:"json"
-				}
-			})
-			.success(function(data) {
-				//$(Document).trigger('change');
-				d.resolve(data);
-			});
-			return d.promise;
-		},
-		get: function(id) {
-			
+		})
+		.success(function(data) {
+			//$(Document).trigger('change');
+			d.resolve(data);
+		});
+		return d.promise;
+	  },
+	  get: function(id) {
+		var d = $q.defer();
+		d.resolve({id:1, hotelName:"Shandrani", roomName: "Ocean Foo View", dateFrom:"01/02/2013", dateTo: "31/09/2013"});
+		return d.promise;
+	  },
+	  deleteSelected: function() { //todo: handle type delete
+		var ids = [];
+		for (var i=0, len=selected.length; i <len;i++) {
+		  ids.push(selected[i].id);
 		}
+		var d = $q.defer();
+		$http({
+			method:'POST',
+			url: '/DMS/components/hotel_allot.new.cfc',
+			params: {
+			  method:"deleteAllot",
+			  argumentCollection:{ids: ids}, 
+			  returnFormat:"json"
+			}
+		})
+		.success(function(data) {
+		  d.resolve(data);
+		});
+		return d.promise;
+	  }
 	};
-	return allot;
   }]);
   
   $provide.factory('Hotel', ['$http', '$q', function($http, $q) {
 	return {
 		query: function(cache) {
 			if (typeof cache === 'undefined') {
-				cache = true;
+			  cache = true;
 			}
 			var d = $q.defer();
 			// Local testing
@@ -71,8 +115,8 @@ angular.module('allotServices', ['ng'], function($provide) {
 			//);
 			//return d.promise;
 			//
-			$http.get('/DMS/components/hotel_allot.cfc?method=getHotels', {cache:cache}).success(function(data) {
-				d.resolve(data);
+			$http.get('/DMS/components/hotel_allot.new.cfc?method=getHotels', {cache:cache}).success(function(data) {
+			  d.resolve($misc.eval(data));
 			});
 			return d.promise;
 		}
@@ -82,10 +126,10 @@ angular.module('allotServices', ['ng'], function($provide) {
 	return {
 		query: function(idHotel, cache) {
 			if (typeof idHotel === 'undefined') {
-				return false;
+			  return false;
 			}
 			if (typeof cache === 'undefined') {
-				cache = true;
+			  cache = true;
 			}
 			var d = $q.defer();
 			// Local testing
@@ -94,12 +138,33 @@ angular.module('allotServices', ['ng'], function($provide) {
 			//);
 			//return d.promise;
 			//
-			$http.get('/DMS/components/hotel_allot.cfc?method=getRooms&idHotel='+idHotel, {cache:cache}).success(function(data) {
-				d.resolve(data);
+			$http.get('/DMS/components/hotel_allot.new.cfc?method=getRooms&idHotel='+idHotel, {cache:cache}).success(function(data) {
+			  d.resolve($misc.eval(data));
 			});
 			return d.promise;
 		}
 	};
   }]);
-  
+  $provide.factory('Agency', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
+	return {
+		query: function(cache) {
+			if (typeof cache === 'undefined') {
+			  cache = true;
+			}
+			var d = $q.defer();
+			//Local testing
+			//d.resolve(
+			//	[{id:'01',name:'Agency 1'}, {id:'02',name:'Agency 2'}]
+			//);
+			//return d.promise;
+			setTimeout(function() {
+			  $http.get('/DMS/components/hotel_allot.new.cfc?method=getAgencies', {cache:cache}).success(function(data) {
+				d.resolve($misc.eval(data));
+			  });
+			  $rootScope.$apply();
+			}, 250);
+			return d.promise;
+		}
+	};
+  }]);
 });

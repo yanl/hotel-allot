@@ -1,6 +1,7 @@
 function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, Allot) {
 	var self = this;
 	var dialog;
+	self.dialog = null;
 	$scope.selectedAlloc = [];
 	$scope.filteredAllocs = Allot.query();
 	//Allot.query().then(function(e) {
@@ -10,11 +11,11 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	$rootScope.$on('dataChange', function(n, o) {
 		$scope.refresh();
 	});
-	$rootScope.$on('close', function(n, o) {
-		if (typeof dialog === 'undefined') {
+	$scope.$on('dialogClose', function(n, o) {
+		if (self.dialog == null) {
 			return;
 		}
-		dialog.close();
+		self.dialog.close();
 	});
 	$scope.$on('filterChange', function(n, o) {
 		$scope.refresh();
@@ -24,21 +25,46 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 		console.log('refreshing ...');
 		// We use .then() because this simple version of ng-grid doesn't work with promises
 		Allot.query(false).then(function(e) {
-			$scope.filteredAllocs =  e;//console.log(e);
+			$scope.selectedAlloc.length = 0;
+			$scope.filteredAllocs =  e;
 		});
 	}
-	$scope.showAdd = function() {
-		if (!dialog) {
-			dialog = $dialog.dialog({
+	self.showAdd = function(edit) {
+		if (edit) {
+			Allot.setEditMode(true);
+		} else {
+			Allot.setEditMode(false);
+		}
+		var ctrl = 'AddCtrl';
+		//if (edit) ctrl = 'EditCtrl';
+		if (!self.dialog || self.lastAddCtrl != ctrl) {
+			self.dialog = $dialog.dialog({
 				backdrop: true,
 				keyboard: true,
 				backdropClick: true,
+				dialogFade:false,
 				templateUrl: 'partials/add.html',
-				controller: 'AddCtrl'
+				controller: ctrl
 				});
 		}
-		dialog.open();
+		self.lastAddCtrl = ctrl;
+		self.dialog.open();
 	}
+	$scope.add = function() {
+		self.showAdd(false);
+	}
+	$scope.editSelected = function() {
+		self.showAdd(true);
+	}
+	$scope.deleteSelected = function() {
+		if (!confirm("Delete selected items?")) {
+			return;
+		}
+		Allot.deleteSelected().then(function(e) {
+			$scope.refresh();
+		});
+	}
+	
 	self.getData = function(args) {
 		var argsOut = '';
 		if (typeof args === 'object') {
@@ -66,49 +92,104 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	//	console.log('*watch trigger', e);
 	//	self.getData(e);
 	//}, true);
-	
+	$scope.$watch('selectedAlloc', function(e) {
+		$rootScope.$emit('selectedAllocChange', e);
+		Allot.setSelected(e);
+	}, true);
+	$scope.getLineClass = function(actionType) {
+		var lineClass = 'line-none';
+		switch (actionType) {
+		case 'Booking':
+			lineClass = 'line-booking';
+			break;
+		case 'Stop Sales':
+			lineClass = 'line-stop';
+			break;
+		case 'Tentative':
+			lineClass = 'line-tentative';
+			break;
+		case 'Free Sales':
+			lineClass = 'line-free';
+			break;
+		case 'Allotement':
+			lineClass = 'line-allot';
+			break;
+		}
+		return lineClass;
+	}
 	$scope.gridOptions = {
 	   data: 'filteredAllocs',
 	   jqueryUITheme: false,
 	   showColumnMenu: false,
 	   enablePaging: false,
 	   selectedItems: $scope.selectedAlloc,
-		columnDefs: [{ field: 'hotelName', displayName: 'Hotel', width: 200 },
+		columnDefs: [{ field: 'actionType', displayName: 'Type', width: 75},
+					 { field: 'hotelName', displayName: 'Hotel', width: 200 },
 					 { field: 'roomName',  displayName: 'Room', width: 100 },
 					 { field: 'dateFrom', displayName: 'From', width: 75,},
-					 { field: 'dateTo', displayName: 'To', width: 75}]
+					 { field: 'dateTo', displayName: 'To', width: 75},
+					 { field: 'client', displayName: 'Client', width: 75}
+					 ],
+		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
 	};
 	self.getData();
 }
 
-function AddCtrl($scope, $rootScope, $dialog, Allot) {
-	$scope.allot = {};
-	$scope.allot.type = 'allotment';
-	$scope.allot.from = null;
-	$scope.allot.to = null;
-	$scope.allot.idHotel = null;
-	$scope.allot.idRoom = null;
-	$scope.allot.releaseType = 'days';
+function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
+	
+	allot = {};
+	allot.id = null;
+	allot.actionType = 'Allotment';
+	allot.dateFrom = null;
+	allot.dateTo = null;
+	allot.idHotel = null;
+	allot.idRoom = null;
+	allot.idAgency = 407;
+	allot.releaseType = 'days';
 	$scope.valid = false;
 	$scope.isLoading = '';
+	$scope.types = Allot.getTypes();
+	$scope.agencies = Agency.query();
+	
+	$scope.allot = allot;
+	
+	var selected = Allot.getSelected()[0];
+	$scope.isEdit = Allot.getEditMode();
+	if ($scope.isEdit) {
+		allot.id = selected.id;
+		allot.actionType = selected.actionType;
+		allot.dateFrom = selected.dateFrom;
+		allot.dateTo = selected.dateTo;
+		allot.idHotel = selected.idHotel;
+		allot.idRoom = selected.idRoom;
+		allot.idAgency = selected.idAgency;
+		allot.client = selected.client;
+	}
+	$scope.typeChange = function() {
+		if ($scope.allot.actionType == 'Allotment') {
+			$scope.allot.idAgency = 407;
+		}
+	}
 	$scope.save = function() {
-		$scope.isLoading = 'loading';
+		$scope.isLoading = true;
 		var allot = {
-			type: $scope.allot.type,
-			from: $scope.allot.from,
-			to: $scope.allot.to,
+			actionType: $scope.allot.actionType,
+			dateFrom: $scope.allot.dateFrom,
+			dateTo: $scope.allot.dateTo,
 			idHotel: $scope.allot.idHotel,
 			idRoom: $scope.allot.idRoom,
 			releaseType: $scope.allot.releaseType
 		};
 		Allot.save(allot).then(function(e) {
-			$scope.isLoading = '';
+			$scope.isLoading = false;
 			$rootScope.$emit('dataChange');
+			$scope.close();
 		});
 	}
-	 $scope.close = function() {
-		$rootScope.$emit('close');
-	 }
+	$scope.close = function() {
+	   $('.select2-drop-active').hide();
+	   $rootScope.$broadcast('dialogClose');
+	}
 }
 
 function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
@@ -117,7 +198,7 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 	//$scope.eventsSource = [{events:$scope.events, color:'red'}];
 	$scope.eventsSource = [$scope.events];
 	$scope.equalsTracker = 0;
-
+	$scope.date = ""
 	$scope.$on('filterChange', function(n, o) {
 		$scope.refresh();
 	});
@@ -133,15 +214,34 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 	
 	var toEvents = function(allocs) {
 		var events = [];
+		var specificClass = '';
 		$scope.events.splice(0, $scope.events.length);
 		allocs.forEach(function(elem, i) {
+			specificClass = '';
+			switch (elem.actionType) {
+				case 'Booking':
+					specificClass = 'event-allot-booking';
+				break;
+				case  'Stop Sales':
+					specificClass = 'event-allot-stop';
+				break;
+				case  'Free Sales':
+					specificClass = 'event-allot-free';
+				break;
+				case  'Tentative':
+					specificClass = 'event-allot-tentative';
+				break;
+				case 'None':
+					specificClass = 'event-allot-none';
+				break;
+			}
 			$scope.events.push(
 				{id: elem.id,
 				title: elem.hotelName+' - '+elem.roomName,
 				start: $.datepicker.parseDate('dd/mm/yy', elem.dateFrom),
 				end: $.datepicker.parseDate('dd/mm/yy', elem.dateTo),
 				allDay: true,
-				className:'event-allot'
+				className:'event-allot '+specificClass
 				}
 			);
 		});
@@ -164,6 +264,7 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 }
 
 function NavCtrl($scope, $location) {
+	$scope.version = '0xf00';
 	$scope.navClass = function(page) {
         var currentRoute = $location.path().substring(1) || 'view';
 		//console.log('currentroute', currentRoute);
@@ -173,7 +274,7 @@ function NavCtrl($scope, $location) {
 
 function FilterCtrl($scope, $rootScope, Allot) {
 	$scope.filter = Allot.getFilter();
-	console.log('view filter', $scope.filter);
+	$scope.types = Allot.getTypes();
 	$scope.applyFilter = function() {
 	   if (!($scope.filter.dateFrom || $scope.filter.dateTo || $scope.filter.idHotel || $scope.filter.idRoom || $scope.filter.type)) {
 		  $scope.clearFilter();
@@ -188,7 +289,6 @@ function FilterCtrl($scope, $rootScope, Allot) {
 	   Allot.setFilter($scope.filter);
 	   $rootScope.$broadcast('filterChange', $scope.filter);
 	}
-
 }
 
 function FilterViewCtrl($scope, Allot) {
@@ -199,4 +299,17 @@ function FilterViewCtrl($scope, Allot) {
 		$scope.filter = Allot.getFilter();
 	}
 	$scope.refresh();
+}
+
+function RecipientsController($scope,$http) {
+    $scope.url = 'recipients.json';
+    $scope.recipientsList = [];
+
+    $scope.fetchRecipients = function() {
+        $http.get($scope.url).then(function(result){
+            $scope.recipientsList = result.data;
+        });
+    }
+
+    $scope.fetchRecipients();
 }

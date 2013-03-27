@@ -4,7 +4,7 @@
 	<div ng-include="'partials/filterView.html'"></div>
 
 	<div> <!--class="table table-hover table-bordered table-condensed table-striped"-->
-		<div class="gridStyle" ng-grid="gridOptions"></div>
+		<div id="allot-grid" class="gridStyle" ng-grid="gridOptions"></div>
 		<!--<table id="manage-table" class="sortable">
 			<thead>
 				<th></th>
@@ -24,13 +24,13 @@
 			</tbody>
         </table>-->
 		<div class="navbar no-bg pull-right">
-			<button class="btn" title="Edit Selected" ui-jq="tooltip" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
-			<button class="btn" title="Delete Selected" ui-jq="tooltip" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
-			<a class="btn" ng-click="showAdd()" title="Add a New Allot." ui-jq="tooltip"><i class="icon-plus"></i></a>
+			<button class="btn" ng-click="editSelected()" title="Edit Selected" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
+			<button class="btn" ng-click="deleteSelected()" title="Delete Selected" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
+			<a class="btn" ng-click="add()" title="Add a New Allot."><i class="icon-plus"></i></a>
 			<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
 		</div>
-		<!--<div>
+		<div id="debug-console">
 			{{selectedAlloc}}
-		</div>-->
+		</div>
 	</div>
 </div>

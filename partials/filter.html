@@ -1,13 +1,16 @@
 <div class="well sidebar-nav" ng-controller="FilterCtrl">
-  <legend>Filter</legend>
+  <legend>
+	Filter
+	<span ng-show="filter.enable" class="label label-inverse">ON</span>
+	<span ng-show="!filter.enable" class="label">OFF</span>
+  </legend>
   <form name="filterForm" class="form-horizontal">
 	  <div class="control-group">
 		<label class="control-label" for="view-type">Type</label>
 		<div class="controls">
 			<select ui-select2 class="view-type" ng-model="filter.type" data-placeholder="All">
 				<option value=""></option>
-				<option value="allotment">Allotment</option>
-				<option value="stopSales">Stop Sales</option>
+				<option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
 			</select>
 		</div>
 		<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
@@ -25,6 +28,12 @@
 		  </div>
 		</div>
 		<hotelrooms id="hotel-room" id-hotel="filter.idHotel" id-room="filter.idRoom"/> <!--hotel-model="filter.idHotel" room-model="filter.idRoom"-->
+	  </div>
+	  <div id="view-more" class="control-group" ng-show="viewMore">
+		<label class="control-label" for="view-client">Client</label>
+		<div class="controls">
+			<input id="view-client" type="text"/>
+		</div>
 	  </div>
 	  <div class="form-actions">
 		<div class="btn-group">

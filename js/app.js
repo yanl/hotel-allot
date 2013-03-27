@@ -130,14 +130,35 @@ angular.module('components', []).
         '</div>',
       replace: true
     };
-  })
-  
+  }).
+  directive('chosen',function(){
+    var linker = function(scope,element,attrs) {
+        var model = attrs['ngModel'];
+
+		scope.$watch(attrs.watch, function () {
+            element.trigger('liszt:updated');
+        });
+
+        /* Added this in so that you could preselect items */
+        scope.$watch(model, function () {
+            element.trigger("liszt:updated");
+        });
+
+        element.chosen();
+    };
+
+    return {
+        restrict:'A',
+        link: linker
+    }
+})
+
 var app = angular.module('hotelAllot',['ui', 'ui.bootstrap', 'ngGrid', 'components', 'allotServices'] )
 .config(['$routeProvider', function($routeProvider) {
 $routeProvider
    .when('/manage/:action', {templateUrl:'partials/manage.html', controller:ManageCtrl})
-   .when('/view', {templateUrl:'partials/view.html', controller:ViewCtrl})
-   .otherwise({redirectTo:'/view'});
+   .when('/view/:date', {templateUrl:'partials/view.html', controller:ViewCtrl})
+   .otherwise({redirectTo:'/view/'});
 }]);
 
 app.factory('serviceId', function() {
@@ -149,5 +170,8 @@ app.factory('serviceId', function() {
 app.value('ui.config', {
    select2: {
       allowClear: true
+   },
+   date: {
+	  dateFormat: 'dd/mm/yy'
    }
 });

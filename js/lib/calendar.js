@@ -17,10 +17,12 @@ angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', f
         restrict: 'A',
           link: function(scope, elm, attrs, $timeout) {
             var sources = scope.$eval(attrs.ngModel);
+			var viewingDate = scope.$eval(attrs.date);
+			console.log('viewingDate', viewingDate);
             var tracker = 0;
-			var equalsTracker = 0;
             /* returns the length of all source arrays plus the length of eventSource itself */
             var getSources = function () {
+              var equalsTracker = scope.$eval(attrs.equalsTracker);
               tracker = 0;
               angular.forEach(sources,function(value,key){
                 if(angular.isArray(value)){

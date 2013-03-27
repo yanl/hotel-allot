@@ -1,6 +1,9 @@
 #view {
 	padding-top: 60px;
 }
+#view-client {
+	width: 116px;
+}
 .controls {
 	margin-bottom: 5px;
 }
@@ -50,6 +53,12 @@ legend {
 	line-height: inherit;
 	font-weight: bold;
 }
+legend .label {
+	margin-bottom: 4px;
+}
+input[type=text] {
+	color: #555555;
+}
 #calendar {
 	
 }
@@ -74,13 +83,22 @@ table input[type="checkbox"] {
 	width: 100%;
 	min-height: 278px;
 }
+.ngHeaderText {
+	font-size: 12px;
+}
 .selected {
 	background-color: #006DCC !important;
 	/*background-image: -webkit-linear-gradient(top, #08C, #04C);*/
 }
+.selected div {
+	background-color: #006DCC !important;
+}
 .selected .ngCell {
 	border-right-color: #006DCC !important;
 	border-left-color: #006DCC !important;
+}
+.ngRow {
+	border-top: 1px solid whitesmoke;
 }
 .ngFooterPanel {
 	display: none;
@@ -99,6 +117,19 @@ table input[type="checkbox"] {
 }
 .brand i {
 	margin-top: 0px;
+}
+#nav-home span {
+	display:none;
+	margin-left: 5px;
+	overflow: hidden;
+}
+#nav-v {
+	float: right;
+	text-transform: none;
+	margin-top: 10px;
+	color: #B8B8B8;
+	font-size: 10px;
+	text-shadow: 0 1px 0 #ffffff;
 }
 .well {
 	border-radius: 0;
@@ -186,11 +217,49 @@ table input[type="checkbox"] {
 }
 .fc-event-skin {
 	order-color: #8F9AB1 !important;
-	background-color: rgba(128, 182, 250, 0.5) !important;
+	/*background-color: rgba(128, 182, 250, 0.5);*/
 }
 .ui-datepicker {
 	z-index: 1051 !important;
 }
 .select2-drop-mask {
 	display: none !important;
+}
+.add-input {
+	width: 234px;
+}
+.event-allot-booking {
+	background-color: rgba(0, 128, 0, 0.7);
+}
+.event-allot-stop {
+	background-color: rgba(148, 26, 26, 0.7);
+}
+.event-allot-none {
+	background-color: rgba(128, 128, 128, 0.7);
+}
+.event-allot-tentative {
+	background-color: rgba(255, 143, 0, 0.7);
+}
+#allot-grid .ngViewport {
+	min-height: 220px;
+	max-height: 400px !important;
+	overflow-y: auto;
+}
+#allot-grid .line-booking {
+	background: #B2E6AD;
+}
+#allot-grid .line-tentative {
+	background: #FFF294;
+}
+#allot-grid .line-stop {
+	background: #FF9D94;
+}
+
+#debug-console {
+	background: rgb(49, 49, 49);
+	color: rgb(255, 206, 50);
+	font-family: monospace;
+	padding: 10px;
+	overflow: scroll;
+	clear: both;
 }

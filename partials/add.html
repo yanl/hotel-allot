@@ -1,67 +1,83 @@
   <div ng-controller="AddCtrl">
 	<div id="addModal" class="modal">
 	  <div class="modal-header">
-		  <h1> <i class="icon-leaf"></i> New Allocation</h1>
+		  <h1> <i class="icon-leaf"></i> <span ng-show="isEdit">Update</span><span ng-show="!isEdit">New</span> Allocation</h1>
 	  </div>
 	  <div class="modal-body">
 		<form id="addAllocForm" name="addAllocForm" class="form-horizontal">
+			
 			<div class="control-group">
 			  <label class="control-label">Type</label>
 			  <div class="controls controls-block">
-				<select ui-select2 class="view-room" ng-model="allot.type" data-placeholder="Type">
-					<option value="allotment">Allotement</option>
-					<option value="stopSales">Stop Sales</option>
+				<select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" ng-disabled="isEdit">
+					<option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
 				</select>
 			  </div>
 			  
 			  <label class="control-label {{filterForm.viewFrom.$valid}}" for="add-view-from">From</label>
 			  <div class="controls">
 				<div class="input-append">
-				  <input id="add-view-from" name="viewFrom" type="text" ng-model="allot.from" ui-date>
+				  <input id="add-view-from" name="viewFrom" type="text" ng-model="allot.dateFrom" ui-date ui-date-format="dd/mm/yy">
 				  <span class="add-on"><i class="icon-calendar"></i></span>
 				</div>
 			  </div>
 			  <label class="control-label" for="add-view-to">To</label>
 			  <div class="controls">
 				<div class="input-append">
-				  <input id="add-view-to" type="text" ng-model="allot.to" ui-date>
+				  <input id="add-view-to" type="text" ng-model="allot.dateTo" ui-date ui-date-format="dd/mm/yy">
 				  <span class="add-on"><i class="icon-calendar"></i></span>
 				</div>
 			  </div>
-			  
-			  
 			  <hotelrooms class="" id-hotel='allot.idHotel' id-room='allot.idRoom' />
-			  
-			  <label class="control-label">Release Conditions</label>
-			  
-			  <div class="controls controls-block">
-				<label class="span2"><input name="releaseType" type="radio" value="days" ng-model="allot.releaseType"/>No. of days</label> <input class="span1" type="text" ng-disabled="allot.releaseType!='days'"/>
-			  </div>
-			  
-			  <div class="controls controls-block">
-				<label class="span2"><input name="releaseType" type="radio" value="date" ng-model="allot.releaseType"/>Specific date</label> <input ui-date class="span2" id="release-date" name="releaseDate" type="text" ng-model="allot.releaseDate" ng-disabled="allot.releaseType!='date'" />
-			  </div>
 			</div>
-			<legend>&nbsp;</legend>
+			<legend></legend>
 			<div class="control-group">
-			  <label class="control-label" for="add-no-room">No. of Rooms</label>
+			  <div ng-show="allot.actionType=='Allotment'">
+				<label class="control-label">Release Conditions</label>
+				
+				<div class="controls controls-block">
+				  <label class="span2"><input name="releaseType" type="radio" value="days" ng-model="allot.releaseType"/>No. of days</label> <input class="span1" type="text" ng-disabled="allot.releaseType!='days'"/>
+				</div>
+				
+				<div class="controls controls-block">
+				  <label class="span2"><input name="releaseType" type="radio" value="date" ng-model="allot.releaseType"/>Specific date</label> <input ui-date class="span2" id="release-date" name="releaseDate" type="text" ng-model="allot.releaseDate" ng-disabled="allot.releaseType!='date'" />
+				</div>
+				<label class="control-label" for="add-no-room">No. of Rooms</label>
+				<div class="controls">
+					<input id="add-no-room" class="add-input" name="noRoom" type="text" ng-model="allot.noRoom">
+				</div>
+				
+				<label class="control-label" for="add-comments">Comments</label>
+				<div class="controls">
+					<textarea id="add-comments" class="add-input" name="comments" ng-model="allot.comments">
+					  
+					</textarea>
+				</div>
+				<legend></legend>
+			  </div>
+			  <label class="control-label" for="add-agency">Agency</label>
 			  <div class="controls">
-				  <input id="add-no-room" name="noRoom" type="text" ng-model="allot.noRoom">
+				  <select id="add-agency" name="agency" ng-model="allot.idAgency" ng-options="i.id as i.name for i in agencies">
+				  </select>
+			  </div>
+			  <div ng-show="allot.actionType!='Allotment'">
+				<label class="control-label" for="add-comments">Client</label>
+				<div class="controls">
+					<textarea id="add-client" class="add-input" name="client" ng-model="allot.client">
+					  
+					</textarea>
+					<!--<input type="text" id="add-client" class="add-input" name="client" ng-model="allot.client" />-->
+				</div>
 			  </div>
 			  
-			  <label class="control-label" for="add-comments">Comments</label>
-			  <div class="controls">
-				  <textarea id="add-comments" name="comments" ng-model="allot.comments">
-					
-				  </textarea>
-			  </div>
 			</div>
 		</form>
 	  </div>
 
 	<div class="modal-footer">
 	  <!--<div class="navbar no-bg pull-right">-->
-		  <button class="btn btn-primary" title="Add a new room allocation" ng-disabled="valid" id="add-allot" ng-click="save()" ng-class="isLoading"><i class="icon-plus icon-white"></i> ADD</button>
+		  <button ng-show="!isEdit" class="btn btn-primary" title="Add a new room allocation" id="add-allot" ng-click="save()" ng-class="{loading:isLoading}" ng-disabled="isLoading || addAllocForm.$invalid"><i class="icon-plus icon-white"></i> ADD</button>
+		  <button ng-show="isEdit" class="btn btn-primary" title="Update allocation" id="add-allot" ng-click="save()" ng-class="{loading:isLoading}" ng-disabled="isLoading || addAllocForm.$invalid"><i class="icon-plus icon-white"></i> UPDATE</button>
 		  <a class="btn" ng-click="close()">Cancel</a>
 	  <!--</div>-->
 	</div>
