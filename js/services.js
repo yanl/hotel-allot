@@ -1,7 +1,7 @@
 angular.module('allotServices', ['ng'], function($provide) {
   $provide.factory('Allot', ['$http', '$q', '$filter', function($http, $q, $filter) {
 	var self = this;
-	var filter = {enable: true, dateFrom:new Date(), dateTo:null, idHotel:null, idRoom:null, type:null}; //$filter('date')(new Date(), 'MM/dd/yyyy')
+	var filter = {enable: true, dateFrom:new Date(), dateTo:null, idHotel:null, idRoom:null, type:null, idAgency:null}; //$filter('date')(new Date(), 'MM/dd/yyyy')
 	var selected = [];
 	var isEditMode = false;
 	return {
@@ -79,18 +79,28 @@ angular.module('allotServices', ['ng'], function($provide) {
 		d.resolve({id:1, hotelName:"Shandrani", roomName: "Ocean Foo View", dateFrom:"01/02/2013", dateTo: "31/09/2013"});
 		return d.promise;
 	  },
-	  deleteSelected: function() { //todo: handle type delete
-		var ids = [];
+	  deleteSelected: function() {
+		var allotConditionIds = [];
+		var allotIds = [];
+		var s;
 		for (var i=0, len=selected.length; i <len;i++) {
-		  ids.push(selected[i].id);
+		  s = selected[i];
+		  if (s.actionType == 'Allotment') {
+			allotConditionIds.push(s.id);
+		  } else {
+			allotIds.push(s.id);
+		  }
 		}
+		//console.log(selected);
 		var d = $q.defer();
+		//d.resolve(true);
+		//return d.promise;
 		$http({
 			method:'POST',
 			url: '/DMS/components/hotel_allot.new.cfc',
 			params: {
 			  method:"deleteAllot",
-			  argumentCollection:{ids: ids}, 
+			  argumentCollection:{ids: allotIds, conditionIds: allotConditionIds}, 
 			  returnFormat:"json"
 			}
 		})

@@ -1,7 +1,8 @@
 <div class="span8">
 	<legend>Calendar View</legend>
-	<div ng-include="'partials/filterView.html'"></div>
+	<!--<div ng-include="'partials/filterView.html'"></div>-->
 	<div id="calendar">
-		<div ui-calendar="{height: 450,editable: false, year:2012,month:10, date:1}" class="calendar" ng-model="eventsSource" equals-tracker="equalsTracker" date="date"></div>
+		<!--<div ui-calendar="{height: 450,editable: false}" class="calendar" ng-model="eventsSource" equals-tracker="equalsTracker" date="date"></div>-->
+		<div ui-calendar="{height: 450,editable: false, year:date.getFullYear(),month:date.getMonth(), date:date.getDate()}" class="calendar" ng-model="eventsSource" equals-tracker="equalsTracker" date="date"></div>
 	</div>
 </div>

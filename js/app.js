@@ -3,11 +3,21 @@ angular.module('components', []).
     return {
       restrict: 'E',
       transclude: true,
-      scope: { idHotel:'=', idRoom:'='},
+      scope: { idHotel:'=', idRoom:'=', requireHotel:'=', requireRoom:'='},
       controller: function($scope, $element, $http, Hotel, Room) {
 		 $scope.hotels = Hotel.query();
 		 if ($scope.idHotel) {
 			getRoom($scope.idHotel);
+		 }
+		 $scope.validateHotel = function(e) {
+		  if (typeof $scope.requireHotel === 'undefined') return true;
+		  if ($scope.requireHotel && !e) return false;
+		  return true;
+		 }
+		 $scope.validateRoom = function(e) {
+		  if (typeof $scope.requireRoom === 'undefined') return true;
+		  if ($scope.requireRoom && !e) return false;
+		  return true;
 		 }
 		 function getRoom(idHotel) {
 			var placeholder = 'No rooms found';

@@ -228,6 +228,9 @@ table input[type="checkbox"] {
 .add-input {
 	width: 234px;
 }
+.fc-event-inner {
+	height: 20px;
+}
 .event-allot-booking {
 	background-color: rgba(0, 128, 0, 0.7);
 }
@@ -241,9 +244,9 @@ table input[type="checkbox"] {
 	background-color: rgba(255, 143, 0, 0.7);
 }
 #allot-grid .ngViewport {
-	min-height: 220px;
+	min-height: 247px;
 	max-height: 400px !important;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 #allot-grid .line-booking {
 	background: #B2E6AD;

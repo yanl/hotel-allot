@@ -8,26 +8,31 @@
 	  <div class="control-group">
 		<label class="control-label" for="view-type">Type</label>
 		<div class="controls">
-			<select ui-select2 class="view-type" ng-model="filter.type" data-placeholder="All">
-				<option value=""></option>
+			<select ui-select2 multiple class="view-type" ng-model="filter.type" data-placeholder="All">
 				<option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
 			</select>
 		</div>
 		<label class="control-label {{filterForm.viewFrom.$valid}}" for="view-from">From</label>
 		<div class="controls">
 		  <div class="input-append">
-			<input id="view-from" name="viewFrom" type="text" ng-model="filter.dateFrom" ui-date>
+			<input id="view-from" name="viewFrom" type="text" ng-model="filter.dateFrom" ui-date ui-reset>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		  </div>
 		</div>
 		<label class="control-label" for="view-to">To</label>
 		<div class="controls">
 		  <div class="input-append">
-			<input id="view-to" type="text" ng-model="filter.dateTo" ui-date>
+			<input id="view-to" type="text" ng-model="filter.dateTo" ui-date ui-reset>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		  </div>
 		</div>
+		<label class="control-label" for="add-agency">Agency</label>
+		<div class="controls">
+			<select id="agency" name="agency" ng-model="filter.idAgency" ng-options="i.id as i.name for i in agencies">
+			</select>
+		</div>
 		<hotelrooms id="hotel-room" id-hotel="filter.idHotel" id-room="filter.idRoom"/> <!--hotel-model="filter.idHotel" room-model="filter.idRoom"-->
+		
 	  </div>
 	  <div id="view-more" class="control-group" ng-show="viewMore">
 		<label class="control-label" for="view-client">Client</label>

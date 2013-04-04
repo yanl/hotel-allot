@@ -4,9 +4,6 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	self.dialog = null;
 	$scope.selectedAlloc = [];
 	$scope.filteredAllocs = Allot.query();
-	//Allot.query().then(function(e) {
-	//	$scope.filteredAllocs =  e;
-	//});
 
 	$rootScope.$on('dataChange', function(n, o) {
 		$scope.refresh();
@@ -64,29 +61,6 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 			$scope.refresh();
 		});
 	}
-	
-	self.getData = function(args) {
-		var argsOut = '';
-		if (typeof args === 'object') {
-			angular.forEach(args, function(e, v) {
-				if (e) {
-					switch (v) {
-						case 'dateFrom':
-						case 'dateTo':
-							e =  $filter('date')(e,'yyyy-MM-dd');
-						break;
-					}
-					argsOut += '&' + v + '=' + e;
-				}
-			});
-		}
-		//console.log('argsOut', argsOut, args);
-		//console.log('$scope.filteredAllocs', $scope.filteredAllocs);
-		//$http.get('/DMS/components/hotel_allot.cfc?method=getAllocs'+argsOut, {cache:true}).success(function(data) {
-		//	self.allocs = data;
-		//	$scope.filteredAllocs = self.allocs;
-		//});
-	}
 
 	//$scope.$watch('filter', function(e) {
 	//	console.log('*watch trigger', e);
@@ -124,28 +98,33 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	   enablePaging: false,
 	   selectedItems: $scope.selectedAlloc,
 		columnDefs: [{ field: 'actionType', displayName: 'Type', width: 75},
-					 { field: 'hotelName', displayName: 'Hotel', width: 200 },
-					 { field: 'roomName',  displayName: 'Room', width: 100 },
+					 { field: 'hotelName', displayName: 'Hotel', width: 120 },
+					 { field: 'roomName',  displayName: 'Room', width: 108 },
 					 { field: 'dateFrom', displayName: 'From', width: 75,},
 					 { field: 'dateTo', displayName: 'To', width: 75},
-					 { field: 'client', displayName: 'Client', width: 75}
+					 { field: 'client', displayName: 'Client', width: 75},
+					 { field: 'agencyName', displayName: 'Agency', width: 75}
 					 ],
 		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
 	};
-	self.getData();
 }
 
 function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 	
 	allot = {};
-	allot.id = null;
+	allot.id = 0;
 	allot.actionType = 'Allotment';
-	allot.dateFrom = null;
+	allot.dateFrom = new Date();
 	allot.dateTo = null;
 	allot.idHotel = null;
 	allot.idRoom = null;
 	allot.idAgency = 407;
+	allot.noRoom = 1;
+	allot.releaseDay = 30;
+	allot.releaseDate = null;
 	allot.releaseType = 'days';
+	allot.comment = '';
+	allot.client = '';
 	$scope.valid = false;
 	$scope.isLoading = '';
 	$scope.types = Allot.getTypes();
@@ -156,6 +135,7 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 	var selected = Allot.getSelected()[0];
 	$scope.isEdit = Allot.getEditMode();
 	if ($scope.isEdit) {
+		if (selected.actionType == 'None') allot.actionType = 'Booking';
 		allot.id = selected.id;
 		allot.actionType = selected.actionType;
 		allot.dateFrom = selected.dateFrom;
@@ -172,15 +152,15 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 	}
 	$scope.save = function() {
 		$scope.isLoading = true;
-		var allot = {
-			actionType: $scope.allot.actionType,
-			dateFrom: $scope.allot.dateFrom,
-			dateTo: $scope.allot.dateTo,
-			idHotel: $scope.allot.idHotel,
-			idRoom: $scope.allot.idRoom,
-			releaseType: $scope.allot.releaseType
-		};
-		Allot.save(allot).then(function(e) {
+		//var allot = {
+		//	actionType: $scope.allot.actionType,
+		//	dateFrom: $scope.allot.dateFrom,
+		//	dateTo: $scope.allot.dateTo,
+		//	idHotel: $scope.allot.idHotel,
+		//	idRoom: $scope.allot.idRoom,
+		//	releaseType: $scope.allot.releaseType
+		//};
+		Allot.save($scope.allot).then(function(e) {
 			$scope.isLoading = false;
 			$rootScope.$emit('dataChange');
 			$scope.close();
@@ -193,12 +173,13 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 }
 
 function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
-	$scope.Allot
+	console.log($routeParams);
+	//$scope.Allot
 	$scope.events = [];
 	//$scope.eventsSource = [{events:$scope.events, color:'red'}];
 	$scope.eventsSource = [$scope.events];
 	$scope.equalsTracker = 0;
-	$scope.date = ""
+	$scope.date = new Date();
 	$scope.$on('filterChange', function(n, o) {
 		$scope.refresh();
 	});
@@ -209,9 +190,24 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 			$scope.filteredAllocs =  e;//console.log(e);
 			//$scope.events = [];
 			toEvents($scope.filteredAllocs);
+			
+			handleViewingDate();
 		});
 	}
-	
+	var handleViewingDate = function() {
+		var date = new Date();
+		if ($scope.events.length > 0) {
+			try {
+				date = $scope.events[0].start;
+			} catch(e){}
+		}
+		$scope.date = date;
+		//console.log('**date', date);
+		//console.log('**fullCalendar', $scope.calendar.fullCalendar);
+		$scope.$evalAsync(function() {
+			$scope.calendar.fullCalendar('gotoDate', date );
+		});
+	}
 	var toEvents = function(allocs) {
 		var events = [];
 		var specificClass = '';
@@ -272,11 +268,12 @@ function NavCtrl($scope, $location) {
     };  
 }
 
-function FilterCtrl($scope, $rootScope, Allot) {
+function FilterCtrl($scope, $rootScope, Allot, Agency) {
 	$scope.filter = Allot.getFilter();
 	$scope.types = Allot.getTypes();
+	$scope.agencies = Agency.query();
 	$scope.applyFilter = function() {
-	   if (!($scope.filter.dateFrom || $scope.filter.dateTo || $scope.filter.idHotel || $scope.filter.idRoom || $scope.filter.type)) {
+	   if (!($scope.filter.dateFrom || $scope.filter.dateTo || $scope.filter.idHotel || $scope.filter.idRoom || $scope.filter.type || $scope.filter.idAgency)) {
 		  $scope.clearFilter();
 		  return;
 	   }
@@ -285,7 +282,7 @@ function FilterCtrl($scope, $rootScope, Allot) {
 	   $rootScope.$broadcast('filterChange', $scope.filter);
 	}
 	$scope.clearFilter = function() {
-	   $scope.filter = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null, type:null};
+	   $scope.filter = {enable: false, dateFrom:null, dateTo:null, idHotel:null, idRoom:null, type:null, idAgency:null};
 	   Allot.setFilter($scope.filter);
 	   $rootScope.$broadcast('filterChange', $scope.filter);
 	}

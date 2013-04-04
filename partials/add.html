@@ -9,7 +9,7 @@
 			<div class="control-group">
 			  <label class="control-label">Type</label>
 			  <div class="controls controls-block">
-				<select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" ng-disabled="isEdit">
+				<select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" ng-disabled="isEdit" required>
 					<option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
 				</select>
 			  </div>
@@ -17,26 +17,31 @@
 			  <label class="control-label {{filterForm.viewFrom.$valid}}" for="add-view-from">From</label>
 			  <div class="controls">
 				<div class="input-append">
-				  <input id="add-view-from" name="viewFrom" type="text" ng-model="allot.dateFrom" ui-date ui-date-format="dd/mm/yy">
+				  <input id="add-view-from" name="viewFrom" type="text" ng-model="allot.dateFrom" ui-date ui-date-format="dd/mm/yy" required>
 				  <span class="add-on"><i class="icon-calendar"></i></span>
 				</div>
 			  </div>
 			  <label class="control-label" for="add-view-to">To</label>
 			  <div class="controls">
 				<div class="input-append">
-				  <input id="add-view-to" type="text" ng-model="allot.dateTo" ui-date ui-date-format="dd/mm/yy">
+				  <input id="add-view-to" type="text" ng-model="allot.dateTo" ui-date ui-date-format="dd/mm/yy" required>
 				  <span class="add-on"><i class="icon-calendar"></i></span>
 				</div>
 			  </div>
-			  <hotelrooms class="" id-hotel='allot.idHotel' id-room='allot.idRoom' />
+			  <div ui-if="allot.actionType=='Allotment'">
+			  <hotelrooms class="" id-hotel='allot.idHotel' id-room='allot.idRoom' require-hotel="true"/>
+			  </div>
+			  <div ui-if="allot.actionType!='Allotment'">
+			  <hotelrooms class="" id-hotel='allot.idHotel' id-room='allot.idRoom' require-hotel="true" require-room="true"/>
+			  </div>
 			</div>
 			<legend></legend>
 			<div class="control-group">
-			  <div ng-show="allot.actionType=='Allotment'">
+			  <div ui-if="allot.actionType=='Allotment'">
 				<label class="control-label">Release Conditions</label>
 				
 				<div class="controls controls-block">
-				  <label class="span2"><input name="releaseType" type="radio" value="days" ng-model="allot.releaseType"/>No. of days</label> <input class="span1" type="text" ng-disabled="allot.releaseType!='days'"/>
+				  <label class="span2"><input name="releaseType" type="radio" value="days" ng-model="allot.releaseType"/>No. of days</label> <input name="releaseDay" class="span1" type="text" ng-model="allot.releaseDay" ng-disabled="allot.releaseType!='days'"/>
 				</div>
 				
 				<div class="controls controls-block">
@@ -44,7 +49,7 @@
 				</div>
 				<label class="control-label" for="add-no-room">No. of Rooms</label>
 				<div class="controls">
-					<input id="add-no-room" class="add-input" name="noRoom" type="text" ng-model="allot.noRoom">
+					<input id="add-no-room" class="add-input" name="noRoom" type="text" ng-model="allot.noRoom" required>
 				</div>
 				
 				<label class="control-label" for="add-comments">Comments</label>
@@ -57,10 +62,10 @@
 			  </div>
 			  <label class="control-label" for="add-agency">Agency</label>
 			  <div class="controls">
-				  <select id="add-agency" name="agency" ng-model="allot.idAgency" ng-options="i.id as i.name for i in agencies">
+				  <select id="add-agency" name="agency" ng-model="allot.idAgency" ng-options="i.id as i.name for i in agencies" required>
 				  </select>
 			  </div>
-			  <div ng-show="allot.actionType!='Allotment'">
+			  <div ui-if="allot.actionType!='Allotment'">
 				<label class="control-label" for="add-comments">Client</label>
 				<div class="controls">
 					<textarea id="add-client" class="add-input" name="client" ng-model="allot.client">
