@@ -2,9 +2,44 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 	var self = this;
 	var dialog;
 	self.dialog = null;
+	$scope.action = $routeParams.action;
 	$scope.selectedAlloc = [];
 	$scope.filteredAllocs = Allot.query();
-
+	$scope.allotConditions = Allot.queryConditions();
+	
+	$scope.gridOptions = {
+	   data: 'filteredAllocs',
+	   jqueryUITheme: false,
+	   showColumnMenu: false,
+	   enablePaging: false,
+	   selectedItems: $scope.selectedAlloc,
+		columnDefs: [{ field: 'actionType', displayName: 'Type', width: 75},
+					 { field: 'hotelName', displayName: 'Hotel', width: 120 },
+					 { field: 'roomName',  displayName: 'Room', width: 108 },
+					 { field: 'dateFrom', displayName: 'From', width: 75,},
+					 { field: 'dateTo', displayName: 'To', width: 75},
+					 { field: 'client', displayName: 'Client', width: 75},
+					 { field: 'agencyName', displayName: 'Agency', width: 75}
+					 ],
+		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
+	};
+	
+	$scope.allotConditionsOptions = {
+	   data: 'allotConditions',
+	   jqueryUITheme: false,
+	   showColumnMenu: false,
+	   enablePaging: false,
+	   selectedItems: $scope.selectedAlloc,
+		columnDefs: [{ field: 'actionType', displayName: 'Type', width: 75},
+					 { field: 'hotelName', displayName: 'Hotel', width: 120 },
+					 { field: 'roomName',  displayName: 'Room', width: 108 },
+					 { field: 'dateFrom', displayName: 'From', width: 75,},
+					 { field: 'dateTo', displayName: 'To', width: 75},
+					 { field: 'comment', displayName: 'Comments', width: 175}
+					 ],
+		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
+	};
+	
 	$rootScope.$on('dataChange', function(n, o) {
 		$scope.refresh();
 	});
@@ -25,8 +60,12 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 			$scope.selectedAlloc.length = 0;
 			$scope.filteredAllocs =  e;
 		});
+		Allot.queryConditions(false).then(function(e) {
+			$scope.allotCondtions.length = 0;
+			$scope.allotCondtions =  e;
+		});
 	}
-	self.showAdd = function(edit) {
+	self.showAdd = function(edit, type) {
 		if (edit) {
 			Allot.setEditMode(true);
 		} else {
@@ -48,7 +87,7 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 		self.dialog.open();
 	}
 	$scope.add = function() {
-		self.showAdd(false);
+		self.showAdd(false, $scope.action);
 	}
 	$scope.editSelected = function() {
 		self.showAdd(true);
@@ -91,22 +130,6 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 		}
 		return lineClass;
 	}
-	$scope.gridOptions = {
-	   data: 'filteredAllocs',
-	   jqueryUITheme: false,
-	   showColumnMenu: false,
-	   enablePaging: false,
-	   selectedItems: $scope.selectedAlloc,
-		columnDefs: [{ field: 'actionType', displayName: 'Type', width: 75},
-					 { field: 'hotelName', displayName: 'Hotel', width: 120 },
-					 { field: 'roomName',  displayName: 'Room', width: 108 },
-					 { field: 'dateFrom', displayName: 'From', width: 75,},
-					 { field: 'dateTo', displayName: 'To', width: 75},
-					 { field: 'client', displayName: 'Client', width: 75},
-					 { field: 'agencyName', displayName: 'Agency', width: 75}
-					 ],
-		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
-	};
 }
 
 function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
@@ -128,6 +151,7 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 	$scope.valid = false;
 	$scope.isLoading = '';
 	$scope.types = Allot.getTypes();
+	$scope.typesNoAllot =  Allot.getTypes(true); // No Allot
 	$scope.agencies = Agency.query();
 	
 	$scope.allot = allot;
@@ -135,9 +159,9 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 	var selected = Allot.getSelected()[0];
 	$scope.isEdit = Allot.getEditMode();
 	if ($scope.isEdit) {
-		if (selected.actionType == 'None') allot.actionType = 'Booking';
 		allot.id = selected.id;
 		allot.actionType = selected.actionType;
+		if (selected.actionType == 'None') allot.actionType = 'Booking';
 		allot.dateFrom = selected.dateFrom;
 		allot.dateTo = selected.dateTo;
 		allot.idHotel = selected.idHotel;
@@ -176,8 +200,9 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 	console.log($routeParams);
 	//$scope.Allot
 	$scope.events = [];
+	$scope.eventsConditions = [];
 	//$scope.eventsSource = [{events:$scope.events, color:'red'}];
-	$scope.eventsSource = [$scope.events];
+	$scope.eventsSource = [$scope.events, $scope.eventsConditions];
 	$scope.equalsTracker = 0;
 	$scope.date = new Date();
 	$scope.$on('filterChange', function(n, o) {
@@ -189,8 +214,12 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 		Allot.query(false).then(function(e) {
 			$scope.filteredAllocs =  e;//console.log(e);
 			//$scope.events = [];
-			toEvents($scope.filteredAllocs);
-			
+			toEvents($scope.filteredAllocs, $scope.events);
+			handleViewingDate();
+		});
+		Allot.queryConditions(false).then(function(e) {
+			$scope.filteredAllocs =  e;//console.log(e);
+			toEvents(e, $scope.eventsConditions);
 			handleViewingDate();
 		});
 	}
@@ -202,16 +231,17 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 			} catch(e){}
 		}
 		$scope.date = date;
-		//console.log('**date', date);
-		//console.log('**fullCalendar', $scope.calendar.fullCalendar);
+		
+		// Force date change even if eventSource doesn't change.
 		$scope.$evalAsync(function() {
+			console.log('getDate:', $scope.calendar.fullCalendar('getDate'));
 			$scope.calendar.fullCalendar('gotoDate', date );
 		});
 	}
-	var toEvents = function(allocs) {
-		var events = [];
+	var toEvents = function(allocs, eventsSource) {
+		//var events = [];
 		var specificClass = '';
-		$scope.events.splice(0, $scope.events.length);
+		eventsSource.splice(0, eventsSource.length);
 		allocs.forEach(function(elem, i) {
 			specificClass = '';
 			switch (elem.actionType) {
@@ -231,7 +261,7 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 					specificClass = 'event-allot-none';
 				break;
 			}
-			$scope.events.push(
+			eventsSource.push(
 				{id: elem.id,
 				title: elem.hotelName+' - '+elem.roomName,
 				start: $.datepicker.parseDate('dd/mm/yy', elem.dateFrom),
@@ -241,7 +271,7 @@ function ViewCtrl($scope, $rootScope, $routeParams, Allot) {
 				}
 			);
 		});
-		return events;
+		//return events;
 	}
 	 
 	$scope.addChild = function() {

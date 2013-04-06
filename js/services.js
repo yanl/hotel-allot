@@ -4,8 +4,14 @@ angular.module('allotServices', ['ng'], function($provide) {
 	var filter = {enable: true, dateFrom:new Date(), dateTo:null, idHotel:null, idRoom:null, type:null, idAgency:null}; //$filter('date')(new Date(), 'MM/dd/yyyy')
 	var selected = [];
 	var isEditMode = false;
+	var allotType = 'actions';
 	return {
-	  getTypes: function() {
+	  getTypes: function(noAllot) {
+		if (noAllot) return [{id:'stopSales', label:'Stop Sales'},
+				{id:'freeSales', label:'Free Sales'},
+				{id:'booking', label:'Booking'},
+				{id:'tentative', label:'Tentative'}];
+		
 		return [{id:'allotment', label:'Allotment'},
 				{id:'stopSales', label:'Stop Sales'},
 				{id:'freeSales', label:'Free Sales'},
@@ -17,6 +23,12 @@ angular.module('allotServices', ['ng'], function($provide) {
 	  },
 	  getEditMode: function() {
 		return isEditMode;
+	  },
+	  setType: function(type) {
+	  	allotType = type;
+	  },
+	  getType: function() {
+	  	return allotType;
 	  },
 	  getFilter: function() {
 		return filter;
@@ -50,6 +62,23 @@ angular.module('allotServices', ['ng'], function($provide) {
 		  //);
 		  //return d.promise;
 		  $http.get('/DMS/components/hotel_allot.new.cfc?method=getAllocs'+args, {cache:cache}).success(function(data) {
+			  d.resolve($misc.eval(data));
+			  //console.log(data);
+		  });
+		  return d.promise;
+	  },
+	  queryConditions: function(cache) {
+		  if (typeof cache === 'undefined') {
+			  cache = true;
+		  }
+		  var d = $q.defer();
+		  var args = '';
+		  if (filter.enable) {
+			cache = false;
+			args = $misc.toArgs(filter);
+			console.log('filtered', args);
+		  }
+		  $http.get('/DMS/components/hotel_allot.new.cfc?method=getAllotConditions'+args, {cache:cache}).success(function(data) {
 			  d.resolve($misc.eval(data));
 			  //console.log(data);
 		  });

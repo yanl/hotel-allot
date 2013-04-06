@@ -1,33 +1,22 @@
-<div class="span8">
-	<legend>Manage Allocations</legend>
-	
-	<!--<div ng-include="'partials/filterView.html'"></div>-->
-
-	<div> <!--class="table table-hover table-bordered table-condensed table-striped"-->
-		<div id="allot-grid" class="gridStyle" ng-grid="gridOptions"></div>
-		<!--<table id="manage-table" class="sortable">
-			<thead>
-				<th></th>
-				<th>Hotel</th>
-				<th>Room</th>
-				<th>From</th>
-				<th>To</th>
-			</thead>
-			<tbody>
-            <tr ng-repeat="item in filteredAllocs">
-				<td><input type="checkbox" /></td>
-                <td >{{item.hotelName}}</td>
-                <td >{{item.roomName}}</td>
-                <td width="50">{{item.dateFrom | date }}</td>
-                <td title="To">{{item.dateTo | date}}</td>
-            </tr>
-			</tbody>
-        </table>-->
+<div >
+	<legend ng-show="action=='actions'">Manage Actions</legend>
+	<legend ng-show="action=='conditions'">Manage Conditions</legend>
+	<div> 
+		<div ng-show="action=='actions'" 
+			id="allot-grid" 
+			class="gridStyle" 
+			ng-grid="gridOptions">
+		</div>
+		<div ng-hide="action=='actions'" 
+			id="allot-conditions-grid" 
+			class="gridStyle" 
+			ng-grid="allotConditionsOptions">
+		</div>
+		
 		<div class="navbar no-bg pull-right">
 			<button class="btn" ng-click="editSelected()" title="Edit Selected" ng-disabled="selectedAlloc.length !=1"><i class="icon-pencil"></i></button>
 			<button class="btn" ng-click="deleteSelected()" title="Delete Selected" ng-disabled="!selectedAlloc.length"><i class="icon-remove"></i></button>
 			<a class="btn" ng-click="add()" title="Add a New Allot."><i class="icon-plus"></i></a>
-			<!--<button class="btn btn-primary" title="Save Changes" disabled>Save Changes</button>-->
 		</div>
 		<div id="debug-console">
 			{{selectedAlloc}}

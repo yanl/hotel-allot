@@ -32,7 +32,7 @@
 	<script src="js/lib/chosen.jquery.min.js"></script>
     <script src="js/lib/jquery.select2.js"></script>
 	<script src="js/lib/fullcalendar.js"></script>
-	<script src="js/lib/angular.js"></script>
+	<script src="js/lib/angular.1.1.4.js"></script>
 	<script src="js/lib/angular-ui.js"></script>
 	<script src="js/lib/calendar.js"></script>
 	<script src="js/lib/ui-bootstrap-0.2.0.min.js"></script>
@@ -65,7 +65,13 @@
 			<a id="nav-home" class="brand" href="#"><i class="icon-home"></i><span>Hotel Allotment</span></a>
 			<ul class="nav" >
 			  <li ng-class="navClass('view')"><a href="#/view/">Calendar</a></li>
-			  <li ng-class="navClass('manage/list')"><a href="#/manage/list">Listing</a></li>
+			  <li class="dropdown" ng-class="navClass('manage/actions') || navClass('manage/conditions')">
+			  	<a class="dropdown-toggle" href="#">Listing<b class="caret"></b></a> <!-- href="#/manage/list" -->
+			  	<ul class="dropdown-menu">
+			  		<li ng-class="navClass('manage/actions')"><a href="#/manage/actions">Actions</a></li>
+			  		<li ng-class="navClass('manage/conditions')"><a href="#/manage/conditions">Conditions</a></li>
+			  	</ul>
+			  </li>
 			</ul>
 			<div id="nav-v">v{{version}}</div>
 		</div>
@@ -76,7 +82,7 @@
 	  <div class="span3">
 		  <div ng-include="'partials/filter.html'"></div>
 	  </div>
-	  <div ng-view></div>
+	  <div class="span8" ng-view  data-ng-animate="{enter: 'slide-down', leave: 'slide-up'}"></div>
 	</div>
 	
   </body>

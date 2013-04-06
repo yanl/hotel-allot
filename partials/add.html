@@ -9,9 +9,16 @@
 			<div class="control-group">
 			  <label class="control-label">Type</label>
 			  <div class="controls controls-block">
-				<select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" ng-disabled="isEdit" required>
-					<option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
-				</select>
+				<div ui-if="isEdit && allot.actionType!='Allotment'">
+				  <select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" required>
+					<option ng-repeat="type in typesNoAllot" value="{{type.label}}">{{type.label}}</option>
+				  </select>
+				</div>
+				<div ui-if="!isEdit || allot.actionType=='Allotment'">
+				  <select ui-select2 class="view-room" ng-model="allot.actionType" data-placeholder="Type" ng-change="typeChange()" ng-disabled="isEdit && allot.actionType == 'Allotment'" required>
+					  <option ng-repeat="type in types" value="{{type.label}}">{{type.label}}</option>
+				  </select>
+				</div>
 			  </div>
 			  
 			  <label class="control-label {{filterForm.viewFrom.$valid}}" for="add-view-from">From</label>
@@ -41,15 +48,15 @@
 				<label class="control-label">Release Conditions</label>
 				
 				<div class="controls controls-block">
-				  <label class="span2"><input name="releaseType" type="radio" value="days" ng-model="allot.releaseType"/>No. of days</label> <input name="releaseDay" class="span1" type="text" ng-model="allot.releaseDay" ng-disabled="allot.releaseType!='days'"/>
+				  <label class="span2"><input name="releaseType" type="radio" value="No.Days" ng-model="allot.releaseType"/>No. of days</label> <input name="releaseDay" class="span1" type="text" ng-model="allot.releaseDay" ng-disabled="allot.releaseType!='days'"/>
 				</div>
 				
 				<div class="controls controls-block">
-				  <label class="span2"><input name="releaseType" type="radio" value="date" ng-model="allot.releaseType"/>Specific date</label> <input ui-date class="span2" id="release-date" name="releaseDate" type="text" ng-model="allot.releaseDate" ng-disabled="allot.releaseType!='date'" />
+				  <label class="span2"><input name="releaseType" type="radio" value="Specific Date" ng-model="allot.releaseType"/>Specific date</label> <input ui-date class="span2" id="release-date" name="releaseDate" type="text" ng-model="allot.releaseDate" ng-disabled="allot.releaseType!='date'" />
 				</div>
 				<label class="control-label" for="add-no-room">No. of Rooms</label>
 				<div class="controls">
-					<input id="add-no-room" class="add-input" name="noRoom" type="text" ng-model="allot.noRoom" required>
+					<input id="add-no-room" class="add-input span1" name="noRoom" type="text" ng-model="allot.noRoom" maxlength="1" required>
 				</div>
 				
 				<label class="control-label" for="add-comments">Comments</label>
