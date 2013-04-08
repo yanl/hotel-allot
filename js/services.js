@@ -51,7 +51,6 @@ angular.module('allotServices', ['ng'], function($provide) {
 		  if (filter.enable) {
 			cache = false;
 			args = $misc.toArgs(filter);
-			console.log('filtered', args);
 		  }
 		  //Local testing
 		  //d.resolve(
@@ -63,7 +62,6 @@ angular.module('allotServices', ['ng'], function($provide) {
 		  //return d.promise;
 		  $http.get('/DMS/components/hotel_allot.new.cfc?method=getAllocs'+args, {cache:cache}).success(function(data) {
 			  d.resolve($misc.eval(data));
-			  //console.log(data);
 		  });
 		  return d.promise;
 	  },

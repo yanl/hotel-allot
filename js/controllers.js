@@ -21,7 +21,9 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 					 { field: 'client', displayName: 'Client', width: 75},
 					 { field: 'agencyName', displayName: 'Agency', width: 75}
 					 ],
-		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
+		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))">'+
+					 '<div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" '+
+					 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
 	};
 	
 	$scope.allotConditionsOptions = {
@@ -37,7 +39,9 @@ function ManageCtrl($scope, $rootScope, $routeParams, $http, $filter, $dialog, A
 					 { field: 'dateTo', displayName: 'To', width: 75},
 					 { field: 'comment', displayName: 'Comments', width: 175}
 					 ],
-		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))"><div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
+		rowTemplate: '<div style="height: 100%" ng-class="getLineClass(row.getProperty(\'actionType\'))">'+
+					 '<div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" '+
+					 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell " ng-cell></div></div>'
 	};
 	
 	$rootScope.$on('dataChange', function(n, o) {
@@ -173,6 +177,10 @@ function AddCtrl($scope, $rootScope, $dialog, Allot, Agency) {
 		if ($scope.allot.actionType == 'Allotment') {
 			$scope.allot.idAgency = 407;
 		}
+	}
+	$scope.dateChange = function() {
+		if (allot.actionType == 'Allotment') return;
+		console.log('**dateFrom', allot.dateFrom);
 	}
 	$scope.save = function() {
 		$scope.isLoading = true;
